@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>DSST-LFT2 · Evaluación cognitiva</title>
+<script id="cfgEmbed" type="application/json">{"preset":"S7","durDSST":120,"practice":6,"pvtDur":120,"pinHash":"131e2811","codes":["A","B"],"groups":[{"dia":"Martes","ini":"08:00","fin":"10:00"},{"dia":"Martes","ini":"14:00","fin":"16:00"},{"dia":"Jueves","ini":"08:00","fin":"10:00"},{"dia":"Jueves","ini":"14:00","fin":"16:00"},{"dia":"Viernes","ini":"12:00","fin":"14:00"}],"generado":"2026-10-28T17:27:06"}</script>
+<style>
+:root{
+  --navy:#12306b; --navy2:#1d4596; --accent:#1f6feb; --ok:#15803d; --okbg:#dcfce7;
+  --err:#b91c1c; --errbg:#fee2e2; --warn:#a16207; --warnbg:#fef9c3;
+  --bg:#f3f5fa; --card:#ffffff; --ink:#111827; --muted:#5b6475; --line:#d9dee8;
+  --sym:#0f172a; --keybg:#eef2fb; --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.45}
+button{font:inherit;cursor:pointer}
+input,select{font:inherit}
+header.top{background:var(--navy);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header.top .brand{font-weight:700;font-size:1.05rem;letter-spacing:.2px}
+header.top .brand small{display:block;font-weight:400;opacity:.8;font-size:.78rem}
+nav.tabs{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+nav.tabs button{background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:999px;padding:6px 14px;font-size:.9rem}
+nav.tabs button.on{background:#fff;color:var(--navy);border-color:#fff;font-weight:600}
+main{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:16px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.card h2{margin:0 0 10px;font-size:1.15rem;color:var(--navy)}
+.card h3{margin:14px 0 8px;font-size:1rem;color:var(--navy)}
+.muted{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:.88rem;color:var(--muted)}
+label.f input,label.f select{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-size:1rem}
+label.f input:focus,label.f select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:600;background:var(--accent);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.big{padding:16px 26px;font-size:1.1rem}
+.btn.sec{background:#e7ecf7;color:var(--navy)}
+.btn.danger{background:var(--err)}
+.btn.ok{background:var(--ok)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{border-radius:10px;padding:10px 12px;font-size:.92rem}
+.note.warn{background:var(--warnbg);color:#713f12}
+.note.info{background:#e8f0fe;color:#1e3a8a}
+.note.err{background:var(--errbg);color:#7f1d1d}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.78rem;font-weight:600;background:#e7ecf7;color:var(--navy)}
+.pill.done{background:var(--okbg);color:var(--ok)}
+.blocks{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.block{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fbfcff;display:flex;flex-direction:column;gap:8px}
+.block h4{margin:0;font-size:1rem;color:var(--navy)}
+.block .steps{font-size:.85rem;color:var(--muted)}
+table.data{border-collapse:collapse;width:100%;font-size:.84rem}
+table.data th,table.data td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;white-space:nowrap}
+table.data th{background:#f1f4fa;color:var(--navy);position:sticky;top:0}
+.scroll{overflow:auto;max-height:420px;border:1px solid var(--line);border-radius:10px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}
+.tile{background:#f6f8fd;border:1px solid var(--line);border-radius:12px;padding:12px}
+.tile .v{font-size:1.7rem;font-weight:700;color:var(--navy);line-height:1.1}
+.tile .k{font-size:.8rem;color:var(--muted)}
+.hidden{display:none !important}
+
+/* ---------- Pantalla de prueba (modo foco) ---------- */
+#stage{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;flex-direction:column}
+#stage .bar{height:8px;background:#dfe5f1}
+#stage .bar>div{height:100%;width:0;background:var(--accent);transition:width .1s linear}
+#stage .stagehead{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;color:var(--muted);font-size:.9rem}
+#stage .stagebody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 12px 18px;gap:14px;overflow:auto}
+.instr{max-width:720px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.instr h2{margin-top:0;color:var(--navy)}
+.instr ol{padding-left:20px}
+.keystrip{display:grid;grid-template-columns:repeat(9,1fr);gap:8px;width:min(980px,100%)}
+.keycell{background:#fff;border:2px solid var(--navy);border-radius:10px;display:flex;flex-direction:column;align-items:center;padding:4px 0 6px}
+.keycell .d{font-weight:800;font-size:clamp(1rem,3.2vw,1.6rem);color:var(--navy);border-bottom:2px solid var(--line);width:100%;text-align:center;padding-bottom:2px}
+.keycell svg{width:clamp(26px,5vw,58px);height:clamp(26px,5vw,58px);margin-top:4px;color:var(--sym)}
+.seq{display:flex;align-items:center;gap:10px}
+.target{width:clamp(110px,22vw,190px);height:clamp(110px,22vw,190px);border-radius:22px;background:#fff;border:4px solid var(--navy);
+  display:flex;align-items:center;justify-content:center;font-size:clamp(3.4rem,12vw,6rem);font-weight:800;color:var(--navy);transition:border-color .08s,background .08s}
+.target.ok{border-color:var(--ok);background:var(--okbg)}
+.target.bad{border-color:var(--err);background:var(--errbg)}
+.next{display:flex;gap:8px}
+.next span{width:clamp(34px,7vw,48px);height:clamp(34px,7vw,48px);border:2px dashed #b8c2d8;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-weight:700;color:#8a94a8;font-size:clamp(1rem,3vw,1.4rem)}
+.ask{font-size:1rem;color:var(--muted)}
+.pad{display:grid;grid-template-columns:repeat(9,1fr);gap:10px;width:min(980px,100%)}
+.pad button{background:#fff;border:2px solid #9fb0d3;border-radius:14px;padding:8px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;user-select:none}
+.pad button:active{background:var(--keybg)}
+.pad button svg{width:clamp(30px,5.4vw,62px);height:clamp(30px,5.4vw,62px);color:var(--sym)}
+.pad button:hover{border-color:var(--accent)}
+.pad button .kl{font-size:.75rem;color:#7b86a0;font-weight:700;letter-spacing:.5px}
+body.touch .pad button .kl{display:none}
+@media (max-width:640px){
+  .pad{grid-template-columns:repeat(3,1fr);width:min(420px,100%)}
+  .pad button{padding:12px 0}
+}
+.pvtarea{width:min(860px,100%);height:min(56vh,440px);background:#111827;border-radius:22px;display:flex;align-items:center;justify-content:center;
+  color:#f87171;font-family:Consolas,"Courier New",monospace;font-size:clamp(3rem,12vw,6.5rem);font-weight:700;user-select:none;touch-action:manipulation}
+.pvtarea.fb{color:#fbbf24}
+.pvtarea.fs{color:#93c5fd;font-size:clamp(1.4rem,5vw,2.4rem);font-family:inherit}
+.kss{display:flex;flex-direction:column;gap:6px;width:min(640px,100%)}
+.kss button{display:flex;gap:14px;align-items:center;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 14px}
+.kss button b{display:inline-flex;width:34px;height:34px;border-radius:50%;background:var(--keybg);color:var(--navy);align-items:center;justify-content:center;flex:none}
+.kss button:hover{border-color:var(--accent)}
+.res{max-width:760px;width:100%}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;z-index:80;padding:16px}
+.modal .box{background:#fff;border-radius:16px;max-width:520px;width:100%;padding:20px}
+footer.foot{text-align:center;color:var(--muted);font-size:.78rem;padding:16px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">DSST-LFT2 · Evaluación cognitiva<small>Laboratorio de Farmacoterapéutica II · FCQ-UASLP · <span id="ver"></span></small></div>
+  <nav class="tabs" id="tabs">
+    <button data-v="vSesion" class="on">1 · Participante</button>
+    <button data-v="vPruebas">2 · Pruebas</button>
+    <button data-v="vDatos">3 · Mis datos</button>
+    <button data-v="vProf">Profesor</button>
+  </nav>
+</header>
+
+<main>
+  <div id="storageWarn" class="note warn hidden" style="margin-bottom:14px"></div>
+  <div id="testModeNote" class="note err hidden" style="margin-bottom:14px">MODO VALIDACIÓN activo: los registros se marcan como <b>VALIDACION</b> y no deben usarse como datos del estudio.</div>
+
+  <!-- ========== 1. PARTICIPANTE ========== -->
+  <section id="vSesion">
+    <div class="card">
+      <h2>Datos del participante</h2>
+      <p class="muted" style="margin-top:0">No escribas tu nombre. Usa únicamente el <b>código de sujeto</b> que te asignó el investigador. Los datos se guardan solo en este navegador hasta que los exportes.</p>
+      <div class="grid2">
+        <label class="f">Código de sujeto *<input id="pCodigo" placeholder="p. ej. S08-03" maxlength="16" autocomplete="off"></label>
+        <label class="f">Grupo de laboratorio *<select id="pGrupo"></select></label>
+        <label class="f">Código de tratamiento asignado<select id="pProducto"></select></label>
+        <label class="f">Sesión del curso
+          <select id="pSesion"><option value="S7">Sesión 7 · Entrenamiento</option><option value="S8">Sesión 8 · Estudio</option></select></label>
+        <label class="f">Forma de respuesta
+          <select id="pEntrada"><option value="auto">Detectar automáticamente</option><option value="teclado">Teclado</option><option value="tactil">Pantalla táctil</option><option value="raton">Ratón</option></select></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="btnGuardarP">Guardar y continuar →</button>
+        <span id="pMsg" class="muted"></span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Antes de empezar</h2>
+      <ul style="margin:0;padding-left:20px">
+        <li>Usa siempre el <b>mismo dispositivo</b> y la <b>misma forma de respuesta</b> en todas las mediciones.</li>
+        <li>Silencia notificaciones y no cambies de ventana durante una prueba (el programa lo registra).</li>
+        <li>Siéntate cómodo, a una distancia habitual de la pantalla. Responde lo más rápido que puedas <b>sin equivocarte</b>.</li>
+        <li>Al terminar cada sesión, exporta tus datos (pestaña 3) y entrégalos como indique el profesor.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========== 2. PRUEBAS ========== -->
+  <section id="vPruebas" class="hidden">
+    <div class="card">
+      <h2 id="planTitle">Plan de mediciones</h2>
+      <p class="muted" id="planSub" style="margin-top:0"></p>
+      <div class="blocks" id="blocks"></div>
+    </div>
+  </section>
+
+  <!-- ========== 3. DATOS ========== -->
+  <section id="vDatos" class="hidden">
+    <div class="card">
+      <h2>Mis datos en este dispositivo</h2>
+      <p class="muted" style="margin-top:0">Cada prueba terminada se guarda automáticamente. Exporta al final de cada sesión.</p>
+      <div class="row" style="margin-bottom:12px">
+        <button class="btn" id="btnExpRes">⬇ Exportar resumen (CSV)</button>
+        <button class="btn sec" id="btnExpTri">⬇ Ensayo por ensayo (CSV)</button>
+        <button class="btn sec" id="btnExpJson">⬇ Respaldo completo (JSON)</button>
+        <label class="btn sec" style="display:inline-block">⬆ Restaurar respaldo<input type="file" id="fRestore" accept=".json" class="hidden"></label>
+        <button class="btn danger" id="btnClear">Borrar datos</button>
+      </div>
+      <div class="scroll"><table class="data" id="tblMine"></table></div>
+    </div>
+  </section>
+
+  <!-- ========== PROFESOR ========== -->
+  <section id="vProf" class="hidden">
+    <div class="card" id="profLock">
+      <h2>Acceso del profesor</h2>
+      <p class="muted" style="margin-top:0">Configuración del estudio y consolidación de datos. (La clave solo evita cambios accidentales; no es un mecanismo de seguridad.)</p>
+      <div class="row"><label class="f" style="min-width:220px">Clave<input id="pin" type="password" autocomplete="off"></label><button class="btn" id="btnPin" style="margin-top:20px">Entrar</button><span id="pinMsg" class="muted" style="margin-top:20px"></span></div>
+    </div>
+    <div id="profBody" class="hidden">
+      <div class="card">
+        <h2>Configuración del estudio</h2>
+        <div class="grid2">
+          <label class="f">Plan de mediciones
+            <select id="cPreset">
+              <option value="S7">S7 · Entrenamiento (3 corridas)</option>
+              <option value="S8">S8 · Estudio (pre-dosis → post-dosis, 120 min)</option>
+              <option value="S8PP">S8 · Estudio con fase posprandial (no usado en 2026)</option>
+            </select></label>
+          <label class="f">Duración del DSST (s)
+            <select id="cDur"><option>90</option><option selected="">120</option></select></label>
+          <label class="f">Ensayos de práctica por corrida<input id="cPrac" type="number" min="0" max="20" value="6"></label>
+          <label class="f">Duración del PVT (s)<input id="cPvt" type="number" min="60" max="600" value="180"></label>
+          <label class="f">Nueva clave del profesor<input id="cPin" type="password" placeholder="(sin cambio)"></label>
+          <label class="f">Códigos de tratamiento (separados por coma)<input id="cCodes" placeholder="A,B"></label>
+        </div>
+        <h3>Grupos de la semana</h3>
+        <div class="scroll" style="max-height:none"><table class="data" id="tblGroups"></table></div>
+        <div class="row" style="margin-top:8px"><button class="btn sec" id="btnAddG">+ Agregar grupo</button><span class="muted" style="font-size:.85rem">El alumno elegirá su grupo y su código de tratamiento en listas desplegables; solo escribirá su código de participante.</span></div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn" id="btnCfg">Guardar configuración</button>
+          <button class="btn ok" id="btnDlCfg">⬇ Descargar HTML configurado para alumnos</button>
+          <button class="btn sec" id="btnLink">Copiar enlace preconfigurado</button>
+          <span id="cfgMsg" class="muted"></span>
+        </div>
+        <p class="muted" style="font-size:.85rem">El plan define los bloques, las réplicas y la <b>forma alterna</b> (clave símbolo–dígito) de cada corrida. Todos los participantes reciben la misma forma en el mismo momento, lo que hace comparables las mediciones.</p>
+      </div>
+      <div class="card">
+        <h2>Asignación por pares (después del entrenamiento)</h2>
+        <p class="muted" style="margin-top:0">Con los archivos de la sesión de entrenamiento ya cargados en «Consolidación», ordena a los participantes de cada grupo por sus sustituciones correctas en ENT3 (o ENT2), forma pares consecutivos y sortea el código de tratamiento dentro de cada par. El sorteo asigna <b>códigos</b> (p. ej., A/B); qué código es el activo lo decide y resguarda el profesor.</p>
+        <div class="row"><button class="btn" id="btnPairs">Generar asignación por pares</button><button class="btn sec" id="btnPairsDl">⬇ Descargar asignación (CSV)</button><span id="pairsMsg" class="muted"></span></div>
+        <div class="scroll" style="margin-top:10px"><table class="data" id="tblPairs"></table></div>
+      </div>
+      <div class="card">
+        <h2>Consolidación de datos del grupo</h2>
+        <p class="muted" style="margin-top:0">Carga los archivos <i>resumen</i> (CSV) o respaldos (JSON) de todos los participantes. Los duplicados se eliminan por identificador de corrida.</p>
+        <div class="row">
+          <label class="btn" style="display:inline-block">⬆ Cargar archivos de participantes<input type="file" id="fCons" accept=".csv,.json" multiple="" class="hidden"></label>
+          <button class="btn sec" id="btnAllocTpl">⬇ Plantilla de clave de cegamiento</button>
+          <label class="btn sec" style="display:inline-block">⬆ Cargar clave de cegamiento (revelar)<input type="file" id="fAlloc" accept=".csv" class="hidden"></label>
+          <button class="btn sec" id="btnConsWide">⬇ Base consolidada (1 fila por sujeto)</button>
+          <button class="btn sec" id="btnConsLong">⬇ Registros combinados (CSV)</button>
+          <button class="btn danger" id="btnConsClear">Vaciar consolidación</button>
+        </div>
+        <p id="consMsg" class="muted"></p>
+        <div class="scroll"><table class="data" id="tblCons"></table></div>
+        <div id="unblind"></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="foot">DSST-LFT2 · Herramienta docente autocontenida (funciona sin internet). Los resultados no constituyen una evaluación clínica.</footer>
+
+<!-- escenario de prueba -->
+<div id="stage" class="hidden">
+  <div class="bar"><div id="bar"></div></div>
+  <div class="stagehead"><span id="stLabel"></span><span id="stTime"></span></div>
+  <div class="stagebody" id="stBody"></div>
+</div>
+<div id="modal" class="modal hidden"><div class="box" id="modalBox"></div></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   DSST-LFT2  ·  Prueba de sustitución de símbolos por dígitos + PVT-B + KSS
+   ===================================================================== */
+const PRISTINE = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+const APP_VERSION = "1.1.0 (2026-10)";
+document.getElementById("ver").textContent = "v" + APP_VERSION;
+
+/* ---------- utilidades ---------- */
+const $ = id => document.getElementById(id);
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+function shuffle(arr,rnd){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function fnv1a(str){let h=0x811c9dc5;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0;}return("0000000"+h.toString(16)).slice(-8);}
+function mean(a){return a.length?a.reduce((s,x)=>s+x,0)/a.length:null}
+function median(a){if(!a.length)return null;const s=a.slice().sort((x,y)=>x-y);const m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2}
+function sd(a){if(a.length<2)return null;const m=mean(a);return Math.sqrt(a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-1))}
+function r1(x,d=1){return x==null||isNaN(x)?"":Number(x.toFixed(d))}
+function nowISO(){const d=new Date();const p=n=>String(n).padStart(2,"0");return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`}
+function uid(){return Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,8)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+/* ---------- almacenamiento local seguro ---------- */
+const KEY="lft2_dsst_v1";
+let memStore={}, storageOK=true;
+function lsGet(k){try{const v=localStorage.getItem(k);return v==null?memStore[k]:v}catch(e){storageOK=false;return memStore[k]}}
+function lsSet(k,v){memStore[k]=v;try{localStorage.setItem(k,v)}catch(e){storageOK=false;showStorageWarn()}}
+function showStorageWarn(){const w=$("storageWarn");w.textContent="Atención: este navegador no permite guardar datos de forma permanente (modo privado o bloqueo). Exporta tus resultados al terminar cada prueba.";w.classList.remove("hidden")}
+function load(){try{return JSON.parse(lsGet(KEY)||"{}")}catch(e){return{}}}
+let DB=Object.assign({profile:{},records:[],trials:{},config:null,cons:{records:[],alloc:null}},load());
+if(!DB.cons)DB.cons={records:[],alloc:null};
+function save(){lsSet(KEY,JSON.stringify(DB))}
+try{localStorage.setItem("__t","1");localStorage.removeItem("__t")}catch(e){storageOK=false}
+if(!storageOK)showStorageWarn();
+
+/* ---------- configuración y planes ---------- */
+const DEFAULT_CFG={preset:"S8",durDSST:120,practice:6,pvtDur:180,pinHash:fnv1a("LFT2"),codes:["A","B"],
+  groups:[{dia:"Martes",ini:"08:00",fin:"10:00"},{dia:"Martes",ini:"14:00",fin:"16:00"},{dia:"Jueves",ini:"08:00",fin:"10:00"},{dia:"Jueves",ini:"14:00",fin:"16:00"},{dia:"Viernes",ini:"12:00",fin:"14:00"}]};
+let EMBED={};try{EMBED=JSON.parse(document.getElementById("cfgEmbed").textContent||"{}")}catch(e){EMBED={}}
+const DIAS=["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+function gLabel(g){return `${g.dia.slice(0,3).toUpperCase().replace("MIÉ","MIE").replace("SÁB","SAB")} ${g.ini}–${g.fin}`}
+const PRESETS={
+  S7:{title:"Sesión 7 · Entrenamiento",sub:"Tres corridas de entrenamiento para estabilizar el aprendizaje de la tarea. La tercera incluye la prueba de vigilancia (PVT).",
+     blocks:[{id:"ENT1",label:"Entrenamiento 1",dsst:1,pvt:0,kss:0,sv:0,ceg:0},
+             {id:"ENT2",label:"Entrenamiento 2",dsst:1,pvt:0,kss:0,sv:0,ceg:0},
+             {id:"ENT3",label:"Entrenamiento 3",dsst:1,pvt:1,kss:1,sv:0,ceg:0}]},
+  S8PP:{title:"Sesión 8 · Estudio (con fase posprandial)",sub:"Calentamiento → Basal → comida estandarizada (45 min) → Pre-dosis → producto en investigación (45 min) → Post-dosis.",
+     blocks:[{id:"CAL",label:"Calentamiento (no se analiza)",dsst:1,pvt:0,kss:0,sv:0,ceg:0},
+             {id:"BAS",label:"Basal (en ayuno de cafeína)",dsst:2,pvt:1,kss:1,sv:1,ceg:0},
+             {id:"PP",label:"Pre-dosis (posprandial)",dsst:2,pvt:1,kss:1,sv:1,ceg:0},
+             {id:"POST",label:"Post-dosis (45 min)",dsst:2,pvt:1,kss:1,sv:1,ceg:1}]},
+  S8:{title:"Sesión 8 · Estudio (sin fase posprandial)",sub:"Calentamiento → Pre-dosis → producto en investigación (45 min) → Post-dosis.",
+     blocks:[{id:"CAL",label:"Calentamiento (no se analiza)",dsst:1,pvt:0,kss:0,sv:0,ceg:0},
+             {id:"PRE",label:"Pre-dosis (basal)",dsst:2,pvt:1,kss:1,sv:1,ceg:0},
+             {id:"POST",label:"Post-dosis (45 min)",dsst:2,pvt:1,kss:1,sv:1,ceg:1}]}
+};
+/* forma alterna fija por bloque y réplica: idéntica para todos los participantes */
+const FORM_TABLE={ENT1:[1],ENT2:[2],ENT3:[3],CAL:[4],BAS:[5,6],PRE:[5,6],PP:[7,8],POST:[9,10]};
+const PARAMS=new URLSearchParams(location.hash.slice(1));
+const TEST_MODE=PARAMS.get("test")==="1";
+function cfg(){const c=Object.assign({},DEFAULT_CFG,EMBED,DB.config||{});if(c.pin&&!c.pinHash)c.pinHash=fnv1a(c.pin);
+  if(PARAMS.get("preset")&&PRESETS[PARAMS.get("preset")])c.preset=PARAMS.get("preset");
+  if(PARAMS.get("dur"))c.durDSST=+PARAMS.get("dur");
+  if(PARAMS.get("prac"))c.practice=+PARAMS.get("prac");
+  if(PARAMS.get("pvt"))c.pvtDur=+PARAMS.get("pvt");
+  return c;}
+if(TEST_MODE)$("testModeNote").classList.remove("hidden");
+
+/* ---------- símbolos (SVG propios: idénticos en cualquier dispositivo) ---------- */
+function starPath(){let p="";for(let i=0;i<10;i++){const r=i%2?6.2:15,a=-Math.PI/2+i*Math.PI/5;p+=(i?"L":"M")+(20+r*Math.cos(a)).toFixed(2)+" "+(21+r*Math.sin(a)).toFixed(2)}return p+"Z"}
+const SYM=[
+ '<circle cx="20" cy="20" r="13"/><circle cx="20" cy="20" r="3.2" fill="currentColor"/>',
+ '<path d="M20 6 L34 32 L6 32 Z"/>',
+ '<rect x="8" y="8" width="24" height="24"/><path d="M8 8 L32 32 M32 8 L8 32"/>',
+ '<path d="M20 5 V35 M5 20 H35"/>',
+ '<path d="M27 6 A14 14 0 1 0 27 34 A11 11 0 1 1 27 6 Z"/>',
+ '<path d="'+starPath()+'"/>',
+ '<path d="M20 4 L36 20 L20 36 L4 20 Z"/>',
+ '<path d="M4 27 L11 13 L18 27 L25 13 L32 27 L36 19"/>',
+ '<path d="M9 6 H31 L9 34 H31 Z"/>'
+];
+const SYM_NAMES=["circulo_punto","triangulo","cuadro_x","cruz","media_luna","estrella","rombo","zigzag","reloj_arena"];
+function svg(i){return `<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">${SYM[i]}</svg>`}
+const KEYS=["a","s","d","f","g","h","j","k","l"];
+
+/* ---------- formas alternas (deterministas) ---------- */
+function makeForm(n){
+  const rnd=mulberry32(1000+n*7919);
+  const keyMap=shuffle([0,1,2,3,4,5,6,7,8],rnd);           // keyMap[d-1] = símbolo del dígito d
+  let layout;                                               // orden de botones de respuesta
+  do{layout=shuffle([0,1,2,3,4,5,6,7,8],rnd)}while(layout.filter((s,i)=>s===keyMap[i]).length>1);
+  const seq=[];let last=-1;                                 // secuencia balanceada sin repeticiones contiguas
+  while(seq.length<600){let b=shuffle([1,2,3,4,5,6,7,8,9],rnd);if(b[0]===last)b.push(b.shift());seq.push(...b);last=b[8]}
+  return{n,keyMap,layout,seq};
+}
+
+/* ---------- métricas (funciones puras, verificadas en la validación) ---------- */
+function computeDSST(trials,durS){
+  const n=trials.length,correct=trials.filter(t=>t.ok).length;
+  const rts=trials.filter(t=>t.ok).map(t=>t.rt);
+  let best=0,cur=0;for(const t of trials){if(t.ok){cur++;best=Math.max(best,cur)}else cur=0}
+  const half=durS*500;
+  return{ec:n,correctas:correct,errores:n-correct,precision_pct:n?100*correct/n:null,
+    tr_medio_ms:mean(rts),tr_mediana_ms:median(rts),tr_de_ms:sd(rts),tr_min_ms:rts.length?Math.min(...rts):null,
+    sml:best,correctas_min:correct/(durS/60),
+    correctas_1a_mitad:trials.filter(t=>t.ok&&t.t<half).length,correctas_2a_mitad:trials.filter(t=>t.ok&&t.t>=half).length};
+}
+function computePVT(trials){
+  const stim=trials.filter(t=>t.type==="stim");
+  const fs=trials.filter(t=>t.type==="fs").length+stim.filter(t=>t.rt<100).length;
+  const valid=stim.filter(t=>t.rt>=100).map(t=>t.rt);
+  const inv=valid.map(r=>1000/r).sort((a,b)=>a-b);
+  const k=Math.max(1,Math.round(inv.length*0.1));
+  const sorted=valid.slice().sort((a,b)=>a-b);
+  const lapses=valid.filter(r=>r>=355).length;
+  return{pvt_estimulos:stim.length,pvt_validas:valid.length,pvt_tr_medio_ms:mean(valid),pvt_tr_mediana_ms:median(valid),
+    pvt_inv_tr:mean(inv),pvt_lento10_inv:inv.length?mean(inv.slice(0,k)):null,pvt_rapido10_ms:sorted.length?mean(sorted.slice(0,k)):null,
+    pvt_lapsos:lapses,pvt_falsos:fs,pvt_score:stim.length?1-(lapses+fs)/(stim.length+trials.filter(t=>t.type==="fs").length):null};
+}
+
+/* ---------- navegación ---------- */
+function show(v){for(const b of document.querySelectorAll("#tabs button"))b.classList.toggle("on",b.dataset.v===v);
+  for(const s of ["vSesion","vPruebas","vDatos","vProf"])$(s).classList.toggle("hidden",s!==v);
+  if(v==="vPruebas")renderBlocks();if(v==="vDatos")renderMine();if(v==="vProf"&&profOpen)renderCons();}
+for(const b of document.querySelectorAll("#tabs button"))b.onclick=()=>{if(b.dataset.v==="vPruebas"&&!DB.profile.codigo){$("pMsg").textContent="Primero guarda tu código de sujeto.";return show("vSesion")}show(b.dataset.v)};
+
+/* ---------- participante ---------- */
+function isTouch(){return matchMedia("(pointer:coarse)").matches||("ontouchstart" in window)}
+function fillSelects(){const c=cfg();
+  const gs=c.groups.map(gLabel);$("pGrupo").innerHTML='<option value="">— elige tu grupo —</option>'+gs.map(g=>`<option>${esc(g)}</option>`).join("");
+  $("pProducto").innerHTML='<option value="">Aún no asignado</option>'+c.codes.map(k=>`<option>${esc(k)}</option>`).join("");}
+function fillProfile(){fillSelects();const p=DB.profile;$("pCodigo").value=p.codigo||"";
+  if(p.grupo&&![...$("pGrupo").options].some(o=>o.value===p.grupo))$("pGrupo").insertAdjacentHTML("beforeend",`<option>${esc(p.grupo)}</option>`);
+  $("pGrupo").value=p.grupo||"";$("pProducto").value=p.producto||"";$("pSesion").value=p.sesion||"S7";$("pEntrada").value=p.entrada||"auto";}
+$("btnGuardarP").onclick=()=>{
+  const code=$("pCodigo").value.trim().toUpperCase();
+  if(!/^[A-Z0-9][A-Z0-9_.-]{1,15}$/.test(code)){$("pMsg").textContent="Código no válido (solo letras, números, guion).";return}
+  if(/\s/.test($("pCodigo").value.trim())){$("pMsg").textContent="El código no debe contener espacios.";return}
+  if(!$("pGrupo").value){$("pMsg").textContent="Elige tu grupo de laboratorio.";return}
+  if($("pSesion").value==="S8"&&!$("pProducto").value){$("pMsg").textContent="En la sesión 8 debes elegir el código de tratamiento que te asignaron.";return}
+  DB.profile={codigo:code,equipo:"",grupo:$("pGrupo").value,producto:$("pProducto").value,sesion:$("pSesion").value,entrada:$("pEntrada").value};
+  save();$("pMsg").textContent="Guardado.";show("vPruebas");
+};
+function entrada(){const e=DB.profile.entrada||"auto";return e==="auto"?(isTouch()?"tactil":"teclado"):e}
+
+/* ---------- plan / bloques ---------- */
+function currentPlan(){const c=cfg();let key=c.preset;if(DB.profile.sesion==="S7")key="S7";else if(key==="S7")key="S8";return{key,...PRESETS[key]}}
+function blockSteps(b){const s=[];if(b.kss)s.push("Somnolencia (KSS)");for(let i=1;i<=b.dsst;i++)s.push("DSST "+i);if(b.pvt)s.push("Vigilancia (PVT)");if(b.sv)s.push("Signos vitales");if(b.ceg)s.push("Pregunta de cegamiento");return s}
+function recsOf(code,block){return DB.records.filter(r=>r.codigo===code&&r.bloque===block&&r.modo===(TEST_MODE?"VALIDACION":"ESTUDIO"))}
+function renderBlocks(){
+  const plan=currentPlan();$("planTitle").textContent=plan.title;$("planSub").textContent=plan.sub+"  ·  Participante: "+DB.profile.codigo;
+  const wrap=$("blocks");wrap.innerHTML="";
+  for(const b of plan.blocks){
+    const recs=recsOf(DB.profile.codigo,b.id);const done=recs.filter(r=>r.prueba==="DSST").length>=b.dsst;
+    const d=document.createElement("div");d.className="block";
+    d.innerHTML=`<div class="row" style="justify-content:space-between"><h4>${esc(b.label)}</h4><span class="pill ${done?"done":""}">${done?"✓ completo":recs.length?"en curso":"pendiente"}</span></div>
+      <div class="steps">${blockSteps(b).join(" · ")}</div>`;
+    const btn=document.createElement("button");btn.className="btn"+(done?" sec":"");btn.textContent=done?"Repetir bloque":"Iniciar bloque";
+    btn.onclick=()=>done?confirmModal("Este bloque ya se realizó. ¿Repetirlo? Se conservarán ambos registros.",()=>runBlock(b)):runBlock(b);
+    d.appendChild(btn);wrap.appendChild(d);
+  }
+}
+
+/* ---------- registro ---------- */
+function baseRecord(block,rep,prueba,forma){const p=DB.profile;return{run_id:uid(),version:APP_VERSION,modo:TEST_MODE?"VALIDACION":"ESTUDIO",fecha_hora:nowISO(),
+  codigo:p.codigo,equipo:p.equipo,grupo:p.grupo,sesion:p.sesion,producto:p.producto,bloque:block,replica:rep,prueba,forma:forma||"",
+  entrada:entrada(),pantalla:`${screen.width}x${screen.height}`,navegador:navigator.userAgent.slice(0,120)}}
+const COLS=["run_id","version","modo","fecha_hora","codigo","equipo","grupo","sesion","producto","bloque","replica","prueba","forma","duracion_s",
+ "ec","correctas","errores","precision_pct","tr_medio_ms","tr_mediana_ms","tr_de_ms","tr_min_ms","sml","correctas_min","correctas_1a_mitad","correctas_2a_mitad",
+ "pvt_estimulos","pvt_validas","pvt_tr_medio_ms","pvt_tr_mediana_ms","pvt_inv_tr","pvt_lento10_inv","pvt_rapido10_ms","pvt_lapsos","pvt_falsos","pvt_score",
+ "kss","pas_1","pad_1","fc_1","pas_2","pad_2","fc_2","pas","pad","fc","ceg_respuesta","ceg_confianza",
+ "salidas_ventana","entrada","pantalla","navegador","verif"];
+function seal(rec){for(const k of Object.keys(rec))if(typeof rec[k]==="number"&&!Number.isInteger(rec[k]))rec[k]=Number(rec[k].toFixed(4));
+  rec.verif=fnv1a(COLS.filter(c=>c!=="verif").map(c=>rec[c]==null?"":String(rec[c])).join("|"));return rec}
+function addRecord(rec,trials){seal(rec);DB.records.push(rec);if(trials)DB.trials[rec.run_id]=trials;save();return rec}
+
+/* ---------- escenario ---------- */
+let visHidden=0;document.addEventListener("visibilitychange",()=>{if(document.hidden)visHidden++});
+window.addEventListener("blur",()=>{visHidden++});
+function stageOpen(label){$("stage").classList.remove("hidden");$("stLabel").textContent=label;$("stTime").textContent="";$("bar").style.width="0";document.body.classList.toggle("touch",entrada()==="tactil")}
+function stageClose(){$("stage").classList.add("hidden");$("stBody").innerHTML="";}
+function stageHTML(h){$("stBody").innerHTML=h}
+function waitClick(id){return new Promise(res=>{const el=$(id);let done=false;
+  const fin=()=>{if(done)return;done=true;el.removeEventListener("click",fn);document.removeEventListener("keydown",kf);res()};
+  const fn=e=>{e.preventDefault();fin()};const kf=e=>{if(e.key==="Enter"&&!e.repeat){e.preventDefault();fin()}};
+  el.addEventListener("click",fn);setTimeout(()=>document.addEventListener("keydown",kf),250)})}
+
+async function runBlock(b){
+  if(DB.profile.sesion==="S8"&&!DB.profile.producto&&!TEST_MODE){alertModal("Antes de iniciar, elige en la pestaña «Participante» el código de tratamiento (A o B) que te asignaron.");return}
+  const plan=currentPlan();const forms=FORM_TABLE[b.id]||[11,12];
+  stageOpen(b.label+" · "+DB.profile.codigo);
+  try{
+    if(b.kss)await runKSS(b);
+    for(let r=1;r<=b.dsst;r++)await runDSST(b,r,forms[r-1]||12,b.dsst);
+    if(b.pvt)await runPVT(b);
+    if(b.sv)await runVitals(b);
+    if(b.ceg)await runBlinding(b);
+    await blockSummary(b);
+  }catch(e){if(e!=="abort")console.error(e)}
+  stageClose();renderBlocks();
+}
+
+/* ---------- KSS ---------- */
+const KSS_LABELS={1:"Extremadamente alerta",2:"",3:"Alerta",4:"",5:"Ni alerta ni somnoliento",6:"",7:"Somnoliento, pero sin esfuerzo para mantenerme despierto",8:"",9:"Extremadamente somnoliento, luchando contra el sueño"};
+function runKSS(b){return new Promise(res=>{
+  let h=`<div class="instr" style="width:min(680px,100%)"><h2>¿Qué tan somnoliento te sientes en este momento?</h2><p class="muted">Escala de Somnolencia de Karolinska (KSS). Elige el número que mejor describa los últimos 5 minutos.</p><div class="kss">`;
+  for(let i=1;i<=9;i++)h+=`<button data-k="${i}"><b>${i}</b><span>${KSS_LABELS[i]||"&nbsp;"}</span></button>`;
+  stageHTML(h+"</div></div>");
+  for(const btn of document.querySelectorAll(".kss button"))btn.onclick=()=>{const rec=baseRecord(b.id,1,"KSS");rec.kss=+btn.dataset.k;addRecord(rec);res()};
+})}
+
+/* ---------- DSST ---------- */
+function keyStripHTML(form){let h='<div class="keystrip">';for(let d=1;d<=9;d++)h+=`<div class="keycell"><div class="d">${d}</div>${svg(form.keyMap[d-1])}</div>`;return h+"</div>"}
+function padHTML(form){let h='<div class="pad" id="pad">';form.layout.forEach((s,i)=>{h+=`<button data-p="${i}" aria-label="símbolo ${SYM_NAMES[s]}">${svg(s)}<span class="kl">${KEYS[i].toUpperCase()}</span></button>`});return h+"</div>"}
+
+function runDSST(b,rep,formN,nreps){
+  const c=cfg(),dur=c.durDSST,form=makeForm(formN),touch=entrada()==="tactil";
+  return new Promise(async(resolve)=>{
+    stageHTML(`<div class="instr"><h2>Sustitución de símbolos por dígitos · corrida ${rep} de ${nreps}</h2>
+      <ol><li>Arriba verás la <b>clave</b>: cada número del 1 al 9 tiene un símbolo.</li>
+      <li>En el centro aparece un <b>número</b>. Busca su símbolo en la clave y pulsa ese símbolo abajo${touch?"":" (o la tecla indicada: A S D F G H J K L)"}.</li>
+      <li>Trabaja <b>lo más rápido que puedas sin equivocarte</b>. La prueba dura <b>${dur} segundos</b> y no se puede pausar.</li></ol>
+      <p class="muted">Forma ${formN}. Primero harás ${c.practice} ensayos de práctica con retroalimentación.</p>
+      <button class="btn big" id="go">${c.practice>0?"Comenzar práctica":"Comenzar prueba"}</button></div>`);
+    await waitClick("go");
+    if(c.practice>0){await dsstLoop(form,null,c.practice,true);
+      stageHTML(`<div class="instr"><h2>¡Listo!</h2><p>Ahora comienza la prueba real de <b>${dur} s</b>. Recuerda: rápido y sin errores.</p><button class="btn big" id="go">Comenzar prueba</button></div>`);
+      await waitClick("go");}
+    const v0=visHidden;
+    const trials=await dsstLoop(form,dur,null,false);
+    const m=computeDSST(trials,dur);
+    const rec=Object.assign(baseRecord(b.id,rep,"DSST","F"+formN),{duracion_s:dur},m,{salidas_ventana:visHidden-v0});
+    addRecord(rec,trials.map(t=>({i:t.i,dig:t.dig,ok:t.ok?1:0,resp:t.resp,rt:Math.round(t.rt*10)/10,t:Math.round(t.t)})));
+    stageHTML(`<div class="instr res"><h2>Corrida ${rep} terminada</h2>
+      <div class="tiles"><div class="tile"><div class="v">${m.correctas}</div><div class="k">Sustituciones correctas</div></div>
+      <div class="tile"><div class="v">${m.ec}</div><div class="k">Espacios completados</div></div>
+      <div class="tile"><div class="v">${r1(m.tr_medio_ms,0)}</div><div class="k">Tiempo medio por acierto (ms)</div></div>
+      <div class="tile"><div class="v">${m.sml}</div><div class="k">Serie más larga sin error</div></div></div>
+      ${rec.salidas_ventana?'<p class="note warn">Se detectó un cambio de ventana durante la prueba; quedó registrado.</p>':""}
+      <p class="muted">Guardado automáticamente.</p><button class="btn big" id="go">Continuar</button></div>`);
+    await waitClick("go");resolve();
+  });
+}
+function dsstLoop(form,durS,nItems,practice){
+  return new Promise(resolve=>{
+    let h=keyStripHTML(form)+`<div class="seq"><div class="target" id="tgt"></div><div class="next" id="nxt"></div></div>
+      <div class="ask">${practice?"<b>PRÁCTICA</b> · ":""}¿Qué símbolo corresponde al número? · <b>rápido y sin errores</b></div>`+padHTML(form);
+    stageHTML(h);
+    const tgt=$("tgt"),nxt=$("nxt"),pad=$("pad");
+    const seqOff=practice?500:0;  // la práctica usa otra parte de la secuencia
+    let i=0,onset=null,t0=null,ended=false,fbT=null;const trials=[];
+    function present(){const d=form.seq[seqOff+i];tgt.textContent=d;tgt.className="target";
+      nxt.innerHTML=[1,2,3,4].map(k=>`<span>${form.seq[seqOff+i+k]}</span>`).join("");
+      onset=null;const pre=performance.now();requestAnimationFrame(ts=>{onset=Math.max(ts,pre)})}
+    function respond(pos,tNow){
+      if(ended)return;const dig=form.seq[seqOff+i],sym=form.layout[pos],ok=sym===form.keyMap[dig-1];
+      const on=onset==null?tNow:onset;
+      trials.push({i:i+1,dig,ok,resp:SYM_NAMES[sym],rt:tNow-on,t:on-t0});
+      tgt.classList.add(ok?"ok":"bad");clearTimeout(fbT);
+      if(practice){ended=true;setTimeout(()=>{ended=false;i++;if(i>=nItems)finish();else present()},ok?350:900);if(!ok){tgt.textContent=dig+" ✗"}return}
+      i++;present();tgt.classList.add(ok?"ok":"bad");fbT=setTimeout(()=>tgt.classList.remove("ok","bad"),120);
+    }
+    const onKey=e=>{if(e.repeat)return;const k=KEYS.indexOf(e.key.toLowerCase());if(k>=0){e.preventDefault();respond(k,performance.now())}};
+    const onPad=e=>{const btn=e.target.closest("button[data-p]");if(!btn)return;e.preventDefault();respond(+btn.dataset.p,performance.now())};
+    document.addEventListener("keydown",onKey);pad.addEventListener("pointerdown",onPad);
+    let timer=null,tick=null;
+    function finish(){ended=true;document.removeEventListener("keydown",onKey);pad.removeEventListener("pointerdown",onPad);clearTimeout(timer);clearInterval(tick);
+      $("bar").style.width="0";$("stTime").textContent="";resolve(trials)}
+    t0=performance.now();present();
+    if(!practice){
+      timer=setTimeout(finish,durS*1000);
+      tick=setInterval(()=>{const el=(performance.now()-t0)/1000;$("bar").style.width=Math.min(100,100*el/durS)+"%";$("stTime").textContent=Math.max(0,Math.ceil(durS-el))+" s"},100);
+    }
+    window.__dsstRun={form,practice,seqOff,get i(){return i},get onset(){return onset},respond};
+  });
+}
+
+/* ---------- PVT-B ---------- */
+function runPVT(b){
+  const c=cfg(),dur=c.pvtDur;
+  return new Promise(async resolve=>{
+    stageHTML(`<div class="instr"><h2>Prueba de vigilancia psicomotora (PVT-B, ${Math.round(dur/60*10)/10} min)</h2>
+      <ol><li>Mira el recuadro negro. En momentos <b>impredecibles</b> aparecerá un contador rojo en marcha.</li>
+      <li>En cuanto lo veas, ${entrada()==="tactil"?"<b>toca el recuadro</b>":"pulsa la <b>barra espaciadora</b> (o toca el recuadro)"}.</li>
+      <li>No te adelantes: responder sin contador cuenta como error.</li></ol>
+      <button class="btn big" id="go">Comenzar</button></div>`);
+    await waitClick("go");
+    stageHTML(`<div class="pvtarea" id="pvt"></div><div class="ask">Responde en cuanto aparezca el contador</div>`);
+    const el=$("pvt"),trials=[];let t0=performance.now(),onset=null,raf=null,isiT=null,fbT=null,ended=false,timeoutT=null;const v0=visHidden;
+    const rnd=Math.random;
+    function schedule(){clearTimeout(isiT);const isi=1000+rnd()*3000;isiT=setTimeout(stim,isi)}
+    function stim(){if(ended)return;el.className="pvtarea";const pre=performance.now();onset=null;
+      const loop=ts=>{if(onset==null)onset=Math.max(ts,pre);el.textContent=String(Math.round(performance.now()-onset)).padStart(3,"0");raf=requestAnimationFrame(loop)};raf=requestAnimationFrame(loop);
+      timeoutT=setTimeout(()=>{if(onset!=null&&!ended){respond(performance.now(),true)}},30000)}
+    function respond(t,timeout){
+      if(ended)return;
+      if(onset==null&&raf==null){trials.push({type:"fs",t:t-t0,rt:null});el.className="pvtarea fs";el.textContent="¡Demasiado pronto!";clearTimeout(fbT);fbT=setTimeout(()=>{el.textContent="";el.className="pvtarea"},800);schedule();return}
+      if(onset==null)return;
+      cancelAnimationFrame(raf);raf=null;clearTimeout(timeoutT);
+      const rt=timeout?30000:t-onset;trials.push({type:"stim",t:onset-t0,rt});onset=null;
+      el.className="pvtarea fb";el.textContent=String(Math.round(rt));fbT=setTimeout(()=>{el.textContent="";el.className="pvtarea"},700);schedule()}
+    const onKey=e=>{if(e.repeat)return;if(e.code==="Space"||e.key===" "){e.preventDefault();respond(performance.now())}};
+    const onPt=e=>{e.preventDefault();respond(performance.now())};
+    document.addEventListener("keydown",onKey);el.addEventListener("pointerdown",onPt);
+    const tick=setInterval(()=>{const e=(performance.now()-t0)/1000;$("bar").style.width=Math.min(100,100*e/dur)+"%";$("stTime").textContent=Math.max(0,Math.ceil(dur-e))+" s"},200);
+    window.__pvtRun={get onset(){return onset},respond,get showing(){return raf!=null}};
+    schedule();
+    setTimeout(async()=>{ended=true;cancelAnimationFrame(raf);clearTimeout(isiT);clearTimeout(timeoutT);clearInterval(tick);
+      document.removeEventListener("keydown",onKey);
+      const m=computePVT(trials);
+      const rec=Object.assign(baseRecord(b.id,1,"PVT"),{duracion_s:dur},m,{salidas_ventana:visHidden-v0});
+      addRecord(rec,trials.map(t=>({type:t.type,t:Math.round(t.t),rt:t.rt==null?"":Math.round(t.rt*10)/10})));
+      $("bar").style.width="0";$("stTime").textContent="";
+      stageHTML(`<div class="instr res"><h2>Vigilancia terminada</h2><div class="tiles">
+        <div class="tile"><div class="v">${r1(m.pvt_tr_mediana_ms,0)}</div><div class="k">Tiempo de reacción mediano (ms)</div></div>
+        <div class="tile"><div class="v">${m.pvt_lapsos}</div><div class="k">Lapsos (≥355 ms)</div></div>
+        <div class="tile"><div class="v">${m.pvt_falsos}</div><div class="k">Respuestas anticipadas</div></div></div>
+        <button class="btn big" id="go">Continuar</button></div>`);
+      await waitClick("go");resolve()},dur*1000);
+  });
+}
+
+/* ---------- signos vitales (los captura el evaluador) ---------- */
+function runVitals(b){return new Promise(res=>{
+  stageHTML(`<div class="instr" style="width:min(640px,100%)"><h2>Signos vitales · ${esc(b.label)}</h2>
+   <p class="muted">Lo registra el evaluador. Sentado, tras 5 min de reposo; dos lecturas separadas por 1 min.</p>
+   <div class="grid2">
+    <label class="f">PAS lectura 1 (mmHg)<input id="v_pas1" type="number" inputmode="numeric"></label>
+    <label class="f">PAD lectura 1 (mmHg)<input id="v_pad1" type="number" inputmode="numeric"></label>
+    <label class="f">FC lectura 1 (lpm)<input id="v_fc1" type="number" inputmode="numeric"></label>
+    <label class="f">PAS lectura 2 (mmHg)<input id="v_pas2" type="number" inputmode="numeric"></label>
+    <label class="f">PAD lectura 2 (mmHg)<input id="v_pad2" type="number" inputmode="numeric"></label>
+    <label class="f">FC lectura 2 (lpm)<input id="v_fc2" type="number" inputmode="numeric"></label></div>
+   <p id="vMsg" class="note err hidden"></p>
+   <div class="row" style="margin-top:12px"><button class="btn big" id="vOk">Guardar signos vitales</button><button class="btn sec" id="vSkip">Omitir</button></div></div>`);
+  const lim={pas:[70,220],pad:[40,140],fc:[35,190]};
+  $("vSkip").onclick=()=>res();
+  $("vOk").onclick=()=>{const rec=baseRecord(b.id,1,"SV");const errs=[];
+    for(const k of ["pas","pad","fc"])for(const n of [1,2]){const v=$("v_"+k+n).value;if(v===""){errs.push(k.toUpperCase()+n+" vacío");continue}
+      const x=+v;if(x<lim[k][0]||x>lim[k][1])errs.push(`${k.toUpperCase()} ${n} fuera de intervalo plausible (${lim[k][0]}–${lim[k][1]})`);rec[k+"_"+n]=x}
+    if(errs.length){$("vMsg").textContent=errs.join(" · ");$("vMsg").classList.remove("hidden");return}
+    for(const k of ["pas","pad","fc"])rec[k]=(rec[k+"_1"]+rec[k+"_2"])/2;
+    addRecord(rec);res()};
+})}
+
+/* ---------- cegamiento ---------- */
+function runBlinding(b){return new Promise(res=>{
+  stageHTML(`<div class="instr" style="width:min(640px,100%)"><h2>Evaluación del cegamiento</h2><p>¿Qué producto crees que recibiste?</p>
+   <div class="row" id="cg"><button class="btn sec" data-c="CAFEINA">Con cafeína</button><button class="btn sec" data-c="DESCAFEINADO">Descafeinado</button><button class="btn sec" data-c="NO_SE">No sé</button></div>
+   <p style="margin-top:16px">¿Qué tan seguro estás? (1 = nada, 5 = totalmente)</p><div class="row" id="cf">${[1,2,3,4,5].map(i=>`<button class="btn sec" data-f="${i}">${i}</button>`).join("")}</div>
+   <div class="row" style="margin-top:16px"><button class="btn big" id="cOk" disabled>Guardar</button></div></div>`);
+  let c=null,f=null;const upd=()=>{$("cOk").disabled=!(c&&f)};
+  for(const x of document.querySelectorAll("#cg button"))x.onclick=()=>{c=x.dataset.c;for(const y of document.querySelectorAll("#cg button"))y.className="btn "+(y===x?"":"sec");upd()};
+  for(const x of document.querySelectorAll("#cf button"))x.onclick=()=>{f=+x.dataset.f;for(const y of document.querySelectorAll("#cf button"))y.className="btn "+(y===x?"":"sec");upd()};
+  $("cOk").onclick=()=>{const rec=baseRecord(b.id,1,"CEG");rec.ceg_respuesta=c;rec.ceg_confianza=f;addRecord(rec);res()};
+})}
+
+function blockSummary(b){return new Promise(async res=>{
+  const recs=recsOf(DB.profile.codigo,b.id),ds=recs.filter(r=>r.prueba==="DSST").slice(-b.dsst);
+  const mc=mean(ds.map(r=>r.correctas));
+  stageHTML(`<div class="instr res"><h2>Bloque «${esc(b.label)}» completo</h2>
+    <div class="tiles"><div class="tile"><div class="v">${r1(mc,1)}</div><div class="k">Correctas (promedio de ${ds.length} corrida${ds.length>1?"s":""})</div></div>
+    <div class="tile"><div class="v">${recs.length}</div><div class="k">Registros guardados del bloque</div></div></div>
+    <p class="muted">Avisa al evaluador y espera la siguiente indicación.</p><button class="btn big" id="go">Volver al plan</button></div>`);
+  await waitClick("go");res()})}
+
+/* ---------- modal ---------- */
+function confirmModal(msg,onYes,typed){
+  $("modalBox").innerHTML=`<p>${esc(msg)}</p>${typed?`<label class="f">Escribe <b>${typed}</b> para confirmar<input id="mTyped"></label>`:""}
+   <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn sec" id="mNo">Cancelar</button><button class="btn ${typed?"danger":""}" id="mYes">Aceptar</button></div>`;
+  $("modal").classList.remove("hidden");
+  $("mNo").onclick=()=>$("modal").classList.add("hidden");
+  $("mYes").onclick=()=>{if(typed&&$("mTyped").value.trim().toUpperCase()!==typed)return;$("modal").classList.add("hidden");onYes()};
+}
+
+/* ---------- CSV ---------- */
+function csvCell(v){if(v==null)return"";const s=String(v);return/[",\n;]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
+function toCSV(rows,cols){return"﻿"+cols.join(",")+"\n"+rows.map(r=>cols.map(c=>csvCell(r[c])).join(",")).join("\n")+"\n"}
+function parseCSV(text){text=text.replace(/^﻿/,"");const rows=[];let row=[],f="",q=false;
+  for(let i=0;i<text.length;i++){const ch=text[i];
+    if(q){if(ch==='"'){if(text[i+1]==='"'){f+='"';i++}else q=false}else f+=ch}
+    else if(ch==='"')q=true;else if(ch===","){row.push(f);f=""}else if(ch==="\n"){row.push(f);rows.push(row);row=[];f=""}else if(ch!=="\r")f+=ch}
+  if(f!==""||row.length){row.push(f);rows.push(row)}
+  const TEXT=new Set(["run_id","version","modo","fecha_hora","codigo","equipo","grupo","sesion","producto","bloque","prueba","forma","entrada","pantalla","navegador","verif","ceg_respuesta","tratamiento","_integridad"]);
+  const h=rows.shift()||[];return rows.filter(r=>r.length>1).map(r=>{const o={};h.forEach((k,i)=>{const v=r[i];
+    o[k]=(v===""||v==null)?null:(!TEXT.has(k)&&/^-?\d+(\.\d+)?(e-?\d+)?$/i.test(v)?+v:v)});return o})}
+function download(name,content,type){const blob=new Blob([content],{type:type||"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function stamp(){return nowISO().replace(/[:T]/g,"").slice(0,13)}
+function myRecs(){return DB.records.filter(r=>r.codigo===DB.profile.codigo)}
+
+/* ---------- vista "mis datos" ---------- */
+function renderMine(){const t=$("tblMine"),R=DB.records.slice().reverse();
+  if(!R.length){t.innerHTML="<tr><td class='muted'>Aún no hay registros.</td></tr>";return}
+  t.innerHTML="<tr><th>Fecha y hora</th><th>Código</th><th>Bloque</th><th>Rép.</th><th>Prueba</th><th>Forma</th><th>Resultado principal</th><th>Modo</th><th>Verif.</th></tr>"+
+   R.map(r=>`<tr><td>${esc(r.fecha_hora)}</td><td>${esc(r.codigo)}</td><td>${esc(r.bloque)}</td><td>${r.replica}</td><td>${r.prueba}</td><td>${esc(r.forma)}</td><td>${mainResult(r)}</td><td>${r.modo}</td><td><code>${r.verif}</code></td></tr>`).join("")}
+function mainResult(r){if(r.prueba==="DSST")return`${r.correctas} correctas / ${r.ec} completados · ${r1(r.tr_medio_ms,0)} ms`;
+  if(r.prueba==="PVT")return`mediana ${r1(r.pvt_tr_mediana_ms,0)} ms · ${r.pvt_lapsos} lapsos · ${r.pvt_falsos} anticipadas`;
+  if(r.prueba==="KSS")return"KSS = "+r.kss;if(r.prueba==="SV")return`PA ${r1(r.pas,0)}/${r1(r.pad,0)} · FC ${r1(r.fc,0)}`;if(r.prueba==="CEG")return`${r.ceg_respuesta} (confianza ${r.ceg_confianza})`;return""}
+$("btnExpRes").onclick=()=>{const R=myRecs();if(!R.length)return;download(`DSST_${DB.profile.codigo}_${stamp()}_resumen.csv`,toCSV(R,COLS))};
+$("btnExpTri").onclick=()=>{const rows=[];for(const r of myRecs()){const T=DB.trials[r.run_id];if(!T)continue;T.forEach((t,k)=>rows.push(Object.assign({run_id:r.run_id,codigo:r.codigo,bloque:r.bloque,replica:r.replica,prueba:r.prueba,forma:r.forma,ensayo:k+1},t)))}
+  download(`DSST_${DB.profile.codigo}_${stamp()}_ensayos.csv`,toCSV(rows,["run_id","codigo","bloque","replica","prueba","forma","ensayo","type","dig","resp","ok","rt","t"]))};
+$("btnExpJson").onclick=()=>download(`DSST_${DB.profile.codigo||"respaldo"}_${stamp()}.json`,JSON.stringify({app:"DSST-LFT2",version:APP_VERSION,profile:DB.profile,records:DB.records,trials:DB.trials},null,1),"application/json");
+$("fRestore").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const j=JSON.parse(await f.text());const ids=new Set(DB.records.map(r=>r.run_id));
+  for(const r of j.records||[])if(!ids.has(r.run_id))DB.records.push(r);Object.assign(DB.trials,j.trials||{});if(!DB.profile.codigo&&j.profile)DB.profile=j.profile;save();renderMine();fillProfile()}catch(err){alertModal("Archivo no válido.")}e.target.value=""};
+$("btnClear").onclick=()=>confirmModal("Se borrarán TODOS los registros de este dispositivo. Exporta antes un respaldo.",()=>{DB.records=[];DB.trials={};save();renderMine()},"BORRAR");
+function alertModal(msg){$("modalBox").innerHTML=`<p>${esc(msg)}</p><div class="row" style="justify-content:flex-end"><button class="btn" id="mOk">Aceptar</button></div>`;$("modal").classList.remove("hidden");$("mOk").onclick=()=>$("modal").classList.add("hidden")}
+
+/* ---------- profesor ---------- */
+let profOpen=false;
+$("btnPin").onclick=()=>{if(fnv1a($("pin").value)===cfg().pinHash||TEST_MODE&&$("pin").value==="TEST"){profOpen=true;$("profLock").classList.add("hidden");$("profBody").classList.remove("hidden");fillCfg();renderCons()}else $("pinMsg").textContent="Clave incorrecta."};
+$("pin").addEventListener("keydown",e=>{if(e.key==="Enter")$("btnPin").click()});
+function fillCfg(){const c=cfg();if(![...$("cDur").options].some(o=>o.value===String(c.durDSST))){const o=document.createElement("option");o.textContent=String(c.durDSST);$("cDur").appendChild(o)}$("cPreset").value=c.preset;$("cDur").value=String(c.durDSST);$("cPrac").value=c.practice;$("cPvt").value=c.pvtDur;$("cCodes").value=c.codes.join(",");GEDIT=c.groups.map(g=>Object.assign({},g));renderGroups()}
+let GEDIT=[];
+function renderGroups(){const t=$("tblGroups");t.innerHTML="<tr><th>#</th><th>Día</th><th>Inicio</th><th>Fin</th><th>Etiqueta que verá el alumno</th><th></th></tr>"+
+  GEDIT.map((g,i)=>`<tr><td>${i+1}</td><td><select data-i="${i}" data-k="dia">${DIAS.map(d=>`<option ${d===g.dia?"selected":""}>${d}</option>`).join("")}</select></td>
+   <td><input type="time" data-i="${i}" data-k="ini" value="${g.ini}"></td><td><input type="time" data-i="${i}" data-k="fin" value="${g.fin}"></td><td><b>${esc(gLabel(g))}</b></td>
+   <td><button class="btn sec" data-del="${i}" style="padding:4px 10px">Quitar</button></td></tr>`).join("");
+  for(const el of t.querySelectorAll("[data-k]"))el.onchange=()=>{GEDIT[+el.dataset.i][el.dataset.k]=el.value;renderGroups()};
+  for(const b of t.querySelectorAll("[data-del]"))b.onclick=()=>{GEDIT.splice(+b.dataset.del,1);renderGroups()};}
+$("btnAddG").onclick=()=>{GEDIT.push({dia:"Lunes",ini:"08:00",fin:"10:00"});renderGroups()};
+function readCfgForm(){const c=Object.assign({},DEFAULT_CFG,EMBED,DB.config||{});c.preset=$("cPreset").value;c.durDSST=+$("cDur").value;c.practice=Math.max(0,Math.min(20,+$("cPrac").value||0));
+  c.pvtDur=Math.max(60,Math.min(600,+$("cPvt").value||180));if($("cPin").value){c.pinHash=fnv1a($("cPin").value)}delete c.pin;
+  const codes=$("cCodes").value.split(",").map(x=>x.trim().toUpperCase()).filter(Boolean);c.codes=codes.length?[...new Set(codes)]:["A","B"];
+  c.groups=GEDIT.filter(g=>g.dia&&g.ini&&g.fin).map(g=>({dia:g.dia,ini:g.ini,fin:g.fin}));return c}
+$("btnCfg").onclick=()=>{DB.config=readCfgForm();save();fillSelects();fillProfile();$("cfgMsg").textContent="Configuración guardada en este dispositivo.";$("cPin").value=""};
+$("btnDlCfg").onclick=()=>{const c=readCfgForm();DB.config=c;save();fillProfile();
+  const emb={preset:c.preset,durDSST:c.durDSST,practice:c.practice,pvtDur:c.pvtDur,pinHash:c.pinHash,codes:c.codes,groups:c.groups,generado:nowISO()};
+  const json=JSON.stringify(emb).replace(/</g,"\\u003c");
+  const html=PRISTINE.replace(/<script id="cfgEmbed" type="application\/json">[\s\S]*?<\/script>/,()=>`<script id="cfgEmbed" type="application/json">${json}<\/script>`);
+  download("DSST_LFT2_alumnos.html",html,"text/html;charset=utf-8");$("cfgMsg").textContent="Archivo configurado descargado: distribúyalo o publíquelo."};
+$("btnLink").onclick=async()=>{const c=cfg();const url=location.href.split("#")[0]+`#preset=${$("cPreset").value}&dur=${$("cDur").value}&prac=${$("cPrac").value}&pvt=${$("cPvt").value}`;
+  try{await navigator.clipboard.writeText(url);$("cfgMsg").textContent="Enlace copiado."}catch(e){$("cfgMsg").textContent=url}};
+$("fCons").onchange=async e=>{let added=0,files=0,bad=0;const ids=new Set(DB.cons.records.map(r=>r.run_id));
+  for(const f of e.target.files){files++;try{const txt=await f.text();let recs=f.name.toLowerCase().endsWith(".json")?(JSON.parse(txt).records||[]):parseCSV(txt);
+    for(const r of recs){if(!r.run_id||ids.has(r.run_id))continue;
+      const chk=fnv1a(COLS.filter(c=>c!=="verif").map(c=>r[c]==null?"":String(r[c])).join("|"));r._integridad=chk===r.verif?"OK":"ALTERADO";
+      ids.add(r.run_id);DB.cons.records.push(r);added++}}catch(err){bad++}}
+  save();$("consMsg").textContent=`${files} archivo(s) leído(s), ${added} registro(s) nuevo(s)${bad?`, ${bad} archivo(s) no válidos`:""}.`;e.target.value="";renderCons()};
+$("fAlloc").onchange=async e=>{const f=e.target.files[0];if(!f)return;const rows=parseCSV(await f.text());const map={};
+  for(const r of rows){const k=Object.keys(r);const code=r.producto??r.codigo_tratamiento??r.codigo??r[k[0]];const tx=r.tratamiento??r[k[k.length-1]];
+    if(code==null||tx==null||String(tx).trim()==="")continue;const g=r.grupo==null?"":String(r.grupo);map[g+"|"+String(code).toUpperCase()]=String(tx).toUpperCase()}
+  DB.cons.alloc=map;save();renderCons();e.target.value=""};
+function allocOf(grupo,prod,code){const A=DB.cons.alloc;if(!A)return"";const p=String(prod||"").toUpperCase();return A[String(grupo||"")+"|"+p]||A["|"+p]||A["|"+String(code).toUpperCase()]||""}
+$("btnAllocTpl").onclick=()=>{const c=cfg();const rows=[];for(const g of c.groups)for(const k of c.codes)rows.push({grupo:gLabel(g),producto:k,tratamiento:""});
+  download("clave_cegamiento_plantilla.csv",toCSV(rows,["grupo","producto","tratamiento"]))};
+/* asignación por pares dentro de cada grupo */
+let PAIRS=[];
+function rint(n){const a=new Uint32Array(1);(window.crypto||{getRandomValues:x=>{x[0]=Math.floor(Math.random()*4294967296);return x}}).getRandomValues(a);return a[0]%n}
+$("btnPairs").onclick=()=>{const c=cfg();const codes=c.codes.slice(0,2);if(codes.length<2){$("pairsMsg").textContent="Se requieren dos códigos de tratamiento.";return}
+  const R=DB.cons.records.filter(r=>r.prueba==="DSST"&&(r.bloque==="ENT3"||r.bloque==="ENT2"));
+  const subj={};for(const r of R){const s=subj[r.codigo]=subj[r.codigo]||{codigo:String(r.codigo),grupo:r.grupo||"",ENT3:null,ENT2:null};s[r.bloque]=r.correctas}
+  const groups={};for(const s of Object.values(subj)){s.score=s.ENT3!=null?s.ENT3:s.ENT2;(groups[s.grupo]=groups[s.grupo]||[]).push(s)}
+  PAIRS=[];let odd=0;
+  for(const [g,list] of Object.entries(groups).sort()){list.sort((a,b)=>(b.score??-1)-(a.score??-1));let par=1;
+    for(let i=0;i<list.length;i+=2){const a=list[i],b=list[i+1];
+      if(b){const f=rint(2);a.codigo_tratamiento=codes[f];b.codigo_tratamiento=codes[1-f];a.par=b.par=g+"-P"+par}
+      else{a.codigo_tratamiento=codes[odd%2];a.par=g+"-impar";odd++}
+      par++}
+    PAIRS.push(...list)}
+  const n0=PAIRS.filter(s=>s.codigo_tratamiento===codes[0]).length;
+  $("tblPairs").innerHTML="<tr><th>Grupo</th><th>Código</th><th>Correctas ENT3/ENT2</th><th>Par</th><th>Código de tratamiento</th></tr>"+PAIRS.map(s=>`<tr><td>${esc(s.grupo)}</td><td>${esc(s.codigo)}</td><td>${s.score??"—"}</td><td>${esc(s.par)}</td><td><b>${esc(s.codigo_tratamiento)}</b></td></tr>`).join("");
+  $("pairsMsg").textContent=PAIRS.length?`${PAIRS.length} participantes: ${n0} con ${codes[0]} y ${PAIRS.length-n0} con ${codes[1]}.`:"No hay datos de entrenamiento consolidados."};
+$("btnPairsDl").onclick=()=>{if(PAIRS.length)download(`asignacion_pares_${stamp()}.csv`,toCSV(PAIRS.map(s=>({grupo:s.grupo,codigo:s.codigo,correctas_entrenamiento:s.score,par:s.par,codigo_tratamiento:s.codigo_tratamiento})),["grupo","codigo","correctas_entrenamiento","par","codigo_tratamiento"]))};
+$("btnConsClear").onclick=()=>confirmModal("Se vaciará la consolidación (no afecta los datos de participantes).",()=>{DB.cons={records:[],alloc:null};save();renderCons()},"VACIAR");
+$("btnConsLong").onclick=()=>{if(DB.cons.records.length)download(`DSST_consolidado_registros_${stamp()}.csv`,toCSV(DB.cons.records,COLS.concat(["_integridad"])))};
+$("btnConsWide").onclick=()=>{const w=wide();if(w.rows.length)download(`DSST_consolidado_por_sujeto_${stamp()}.csv`,toCSV(w.rows,w.cols))};
+
+function wide(){
+  const R=DB.cons.records.filter(r=>r.modo!=="VALIDACION"||TEST_MODE);const by={};
+  for(const r of R){const k=String(r.codigo);(by[k]=by[k]||[]).push(r)}
+  const blocks=[];for(const r of R)if(!blocks.includes(r.bloque))blocks.push(r.bloque);
+  const order=["ENT1","ENT2","ENT3","CAL","BAS","PRE","PP","POST"];blocks.sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+  const cols=["codigo","grupo","producto"];if(DB.cons.alloc)cols.push("tratamiento");
+  for(const b of blocks)cols.push(`${b}_DSST_correctas_r1`,`${b}_DSST_correctas_r2`,`${b}_DSST_correctas`,`${b}_DSST_EC`,`${b}_DSST_TRmedio`,`${b}_DSST_SML`,`${b}_PVT_invTR`,`${b}_PVT_mediana`,`${b}_PVT_lapsos`,`${b}_KSS`,`${b}_PAS`,`${b}_PAD`,`${b}_FC`);
+  cols.push("cegamiento_resp","cegamiento_conf","n_registros","alertas");
+  const rows=[];
+  for(const [code,rs] of Object.entries(by)){const o={codigo:code,equipo:rs[0].equipo,grupo:rs[0].grupo,producto:rs.map(r=>r.producto).find(x=>x!=null&&x!=="")||""};
+    if(DB.cons.alloc)o.tratamiento=allocOf(o.grupo,o.producto,code);
+    const alerts=[];
+    for(const b of blocks){const d=rs.filter(r=>r.bloque===b&&r.prueba==="DSST").sort((x,y)=>x.replica-y.replica||String(x.fecha_hora).localeCompare(String(y.fecha_hora)));
+      const byRep={};for(const r of d)byRep[r.replica]=r;   // si se repitió, cuenta la última de cada réplica
+      const reps=Object.values(byRep);if(d.length>reps.length)alerts.push(b+": corrida repetida");
+      o[`${b}_DSST_correctas_r1`]=byRep[1]?.correctas??"";o[`${b}_DSST_correctas_r2`]=byRep[2]?.correctas??"";
+      const mm=f=>{const v=reps.map(r=>r[f]).filter(x=>x!=null&&x!=="");return v.length?Number(mean(v.map(Number)).toFixed(2)):""};
+      o[`${b}_DSST_correctas`]=mm("correctas");o[`${b}_DSST_EC`]=mm("ec");o[`${b}_DSST_TRmedio`]=mm("tr_medio_ms");o[`${b}_DSST_SML`]=mm("sml");
+      const last=t=>rs.filter(r=>r.bloque===b&&r.prueba===t).slice(-1)[0];
+      const p=last("PVT"),k=last("KSS"),s=last("SV");
+      o[`${b}_PVT_invTR`]=p?.pvt_inv_tr??"";o[`${b}_PVT_mediana`]=p?.pvt_tr_mediana_ms??"";o[`${b}_PVT_lapsos`]=p?.pvt_lapsos??"";o[`${b}_KSS`]=k?.kss??"";
+      o[`${b}_PAS`]=s?.pas??"";o[`${b}_PAD`]=s?.pad??"";o[`${b}_FC`]=s?.fc??"";
+      if(rs.some(r=>r.bloque===b&&+r.salidas_ventana>0))alerts.push(b+": salida de ventana");}
+    const cg=rs.filter(r=>r.prueba==="CEG").slice(-1)[0];o.cegamiento_resp=cg?.ceg_respuesta??"";o.cegamiento_conf=cg?.ceg_confianza??"";
+    if(rs.some(r=>r._integridad==="ALTERADO"))alerts.push("registro alterado");
+    o.n_registros=rs.length;o.alertas=alerts.join("; ");rows.push(o)}
+  rows.sort((a,b)=>String(a.codigo).localeCompare(String(b.codigo)));
+  return{rows,cols,blocks};
+}
+function renderCons(){
+  const w=wide(),t=$("tblCons");
+  if(!w.rows.length){t.innerHTML="<tr><td class='muted'>Sin datos consolidados.</td></tr>";$("unblind").innerHTML="";return}
+  const show=["codigo","grupo","producto"].concat(DB.cons.alloc?["tratamiento"]:[]).concat(w.blocks.map(b=>`${b}_DSST_correctas`)).concat(["n_registros","alertas"]);
+  t.innerHTML="<tr>"+show.map(c=>`<th>${esc(c)}</th>`).join("")+"</tr>"+w.rows.map(r=>"<tr>"+show.map(c=>`<td>${esc(r[c])}</td>`).join("")+"</tr>").join("");
+  renderUnblind(w);
+}
+
+/* ---------- revelación del cegamiento: estadística descriptiva + Welch ---------- */
+function lgamma(x){const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];let y=x,t=x+5.5;t-=(x+.5)*Math.log(t);let s=1.000000000190015;for(const ci of c)s+=ci/++y;return-t+Math.log(2.5066282746310005*s/x)}
+function betacf(a,b,x){let qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap;if(Math.abs(d)<1e-30)d=1e-30;d=1/d;let h=d;
+  for(let m=1;m<=200;m++){const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));d=1+aa*d;if(Math.abs(d)<1e-30)d=1e-30;c=1+aa/c;if(Math.abs(c)<1e-30)c=1e-30;d=1/d;h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));d=1+aa*d;if(Math.abs(d)<1e-30)d=1e-30;c=1+aa/c;if(Math.abs(c)<1e-30)c=1e-30;d=1/d;const del=d*c;h*=del;if(Math.abs(del-1)<3e-12)break}return h}
+function ibeta(a,b,x){if(x<=0)return 0;if(x>=1)return 1;const bt=Math.exp(lgamma(a+b)-lgamma(a)-lgamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2)?bt*betacf(a,b,x)/a:1-bt*betacf(b,a,1-x)/b}
+function tPvalue2(t,df){return ibeta(df/2,.5,df/(df+t*t))}
+function welch(a,b){const ma=mean(a),mb=mean(b),va=sd(a)**2,vb=sd(b)**2,na=a.length,nb=b.length;const se=Math.sqrt(va/na+vb/nb);const t=(ma-mb)/se;
+  if(!(se>0))return{diff:ma-mb,t:NaN,df:NaN,p:NaN,g:NaN};const df=(va/na+vb/nb)**2/((va/na)**2/(na-1)+(vb/nb)**2/(nb-1));const sp=Math.sqrt(((na-1)*va+(nb-1)*vb)/(na+nb-2));const g=(ma-mb)/sp*(1-3/(4*(na+nb)-9));
+  return{diff:ma-mb,t,df,p:tPvalue2(t,df),g}}
+window.__stats={welch,tPvalue2,computeDSST,computePVT,makeForm,fnv1a,parseCSV,toCSV,COLS};
+function renderUnblind(w){
+  const el=$("unblind");if(!DB.cons.alloc){el.innerHTML='<p class="muted" style="margin-top:12px">Descarga la plantilla, escribe en <code>tratamiento</code> CAFEINA o DESCAFEINADO para cada grupo y código, y cárgala únicamente después de cerrar la base de datos. Si el significado de A y B es el mismo en todos los grupos, basta con llenar todas las filas igual.</p>';return}
+  const pre=w.blocks.includes("PP")?"PP":(w.blocks.includes("PRE")?"PRE":"BAS");
+  if(!w.blocks.includes("POST")){el.innerHTML='<p class="muted">Aún no hay datos post-dosis.</p>';return}
+  const vars=[["DSST_correctas","DSST: sustituciones correctas",1],["DSST_EC","DSST: espacios completados",1],["DSST_TRmedio","DSST: tiempo medio por acierto (ms)",-1],["PVT_invTR","PVT: 1/TR medio (s⁻¹)",1],["PVT_lapsos","PVT: lapsos",-1],["KSS","KSS (somnolencia)",-1],["PAS","PAS (mmHg)",0],["PAD","PAD (mmHg)",0],["FC","FC (lpm)",0]];
+  const groups=[...new Set(w.rows.map(r=>r.tratamiento).filter(Boolean))].sort();
+  if(groups.length!==2){el.innerHTML=`<p class="note warn">Se esperaban 2 grupos de tratamiento; se encontraron: ${esc(groups.join(", ")||"ninguno")}.</p>`;return}
+  let h=`<h3>Revelación del cegamiento · cambio ${pre} → POST</h3><div class="scroll"><table class="data"><tr><th>Variable</th>${groups.map(g=>`<th>${esc(g)}: Δ media ± DE (n)</th>`).join("")}<th>Diferencia (${esc(groups[0])} − ${esc(groups[1])})</th><th>g de Hedges</th><th>p (Welch, 2 colas)</th></tr>`;
+  for(const [v,lab] of vars){const d=groups.map(g=>w.rows.filter(r=>r.tratamiento===g).map(r=>{const a=r[`${pre}_${v}`],b=r[`POST_${v}`];return a===""||b===""||a==null||b==null?null:(+b)-(+a)}).filter(x=>x!=null&&!isNaN(x)));
+    if(d.some(x=>x.length<2)){h+=`<tr><td>${lab}</td><td colspan="${groups.length+3}" class="muted">datos insuficientes</td></tr>`;continue}
+    const s=welch(d[0],d[1]);h+=`<tr><td>${lab}</td>${d.map(x=>`<td>${r1(mean(x),2)} ± ${r1(sd(x),2)} (${x.length})</td>`).join("")}<td>${r1(s.diff,2)}</td><td>${isNaN(s.g)?"—":r1(s.g,2)}</td><td>${isNaN(s.p)?"—":s.p<0.001?"&lt;0.001":r1(s.p,3)}</td></tr>`}
+  h+=`</table></div><p class="muted" style="font-size:.85rem">Análisis exploratorio para la discusión en clase. El análisis confirmatorio del reporte es el ANCOVA especificado en el protocolo (valor post-dosis ajustado por el valor pre-dosis).</p>`;
+  el.innerHTML=h;
+}
+
+/* ---------- arranque ---------- */
+fillProfile();
+if(DB.profile.codigo&&location.hash.indexOf("tab=")<0)show("vPruebas");
+</script></body></html>
