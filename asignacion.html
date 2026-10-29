@@ -110,7 +110,7 @@ footer{color:var(--muted);font-size:.78rem;text-align:center;padding:10px}
 <section id="vAlumno">
   <div id="aNoLink" class="card hidden">
     <h2>Consulta tu tratamiento asignado</h2>
-    <p>Escanea con la cámara de tu teléfono el <b>código QR que proyecta el profesor</b> al final de la sesión 7. Se abrirá esta página lista para tu grupo.</p>
+    <p>Escanea con la cámara de tu teléfono el <b>código QR de tu grupo que proyecta el profesor</b> en la sesión 7, después de firmar tu consentimiento. Se abrirá esta página lista para tu grupo.</p>
     <p class="muted small">Si recibiste el enlace por Teams, ábrelo directamente. Esta página no guarda ni envía tus datos a ningún servidor.</p>
   </div>
 
@@ -127,6 +127,7 @@ footer{color:var(--muted);font-size:.78rem;text-align:center;padding:10px}
         <div class="letter"><div class="lc">Tu tratamiento es</div><div class="lt" id="envLetter">?</div><div class="lc" id="envCode"></div></div>
         <div class="front"></div><div class="flap"></div><div class="seal">LFT2</div>
       </div></div>
+      <label id="aConsentL" style="display:flex;gap:10px;align-items:flex-start;justify-content:center;max-width:420px;margin:0 auto 14px;text-align:left;font-size:.95rem"><input type="checkbox" id="aConsent" style="width:22px;height:22px;margin-top:2px;flex:none"><span>Ya firmé mi <b>carta de consentimiento informado</b> para participar en el estudio.</span></label>
       <button class="btn big" id="btnOpen">Abrir mi sobre</button>
     </div>
   </div>
@@ -144,7 +145,7 @@ footer{color:var(--muted);font-size:.78rem;text-align:center;padding:10px}
       <div class="note info"><b>Qué hacer ahora</b>
         <ol class="steps">
           <li>Anota en tu <b>CRF</b> (sección 5, «Entrenamiento y asignación»): código de tratamiento <b id="rL2"></b> y comprobante <b id="rP2"></b>.</li>
-          <li>Guarda el comprobante (botón de abajo o captura de pantalla) y muéstralo al profesor antes de salir.</li>
+          <li>Guarda el comprobante (botón de abajo o captura de pantalla) y muéstralo al docente.</li>
           <li>En la sesión 8, en <b>DSST-LFT2 › Participante</b>, elige el código de tratamiento <b id="rL3"></b>.</li>
           <li>Recuerda las condiciones previas a la sesión 8: abstinencia de cafeína y sueño habitual (ver tu hoja de instrucciones).</li>
         </ol>
@@ -164,7 +165,7 @@ footer{color:var(--muted);font-size:.78rem;text-align:center;padding:10px}
     <h2>Acceso del profesor</h2>
     <p class="muted" id="pGateTxt">Escribe el PIN del profesor.</p>
     <div class="row"><input id="pPin" type="password" inputmode="numeric" placeholder="PIN" style="padding:10px;border:1px solid var(--line);border-radius:10px;max-width:180px"><button class="btn" id="btnPin">Entrar</button></div>
-    <p class="note warn small">La sección del profesor guarda en <b>este navegador</b> la lista de alumnos con nombres. Úsala solo en tu equipo y haz respaldo (pestaña 6). Los enlaces y QR que se entregan a los alumnos <b>no contienen nombres</b>.</p>
+    <p class="note warn small">La sección del profesor guarda en <b>este navegador</b> la lista de alumnos con nombres. Úsala solo en tu equipo y haz respaldo (sección 6). Los enlaces y QR que se entregan a los alumnos <b>no contienen nombres</b>.</p>
   </div>
 
   <div id="pBody" class="hidden">
@@ -187,14 +188,14 @@ footer{color:var(--muted);font-size:.78rem;text-align:center;padding:10px}
     </div>
 
     <div class="card">
-      <h2>3 · Resultados del entrenamiento (ENT3)</h2>
-      <p class="muted" style="margin-top:0">Carga los CSV «resumen» que exportó cada alumno en DSST-LFT2 al terminar la sesión 7 (puedes seleccionar varios a la vez) o la base consolidada. También puedes escribir el valor a mano en la tabla del grupo. Si falta ENT3 se usa ENT2.</p>
-      <div class="row"><input type="file" id="fEnt" accept=".csv" multiple><span id="entMsg" class="muted small"></span></div>
+      <h2>3 · Asignación previa por bloques</h2>
+      <p class="muted" style="margin-top:0">Antes de la sesión 7 se genera la asignación de <b>todos</b> los alumnos registrados, estratificada por grupo de laboratorio: dentro de cada grupo, en orden de código, se forman bloques aleatorios de 2 o 4 con la mitad de cada código. Después se <b>bloquea</b> cada grupo para crear su enlace y QR. Los alumnos abren su sobre en la sesión 7, <b>solo después de firmar el consentimiento</b>. Quien marque «Baja del curso» antes de generar queda fuera de la lista.</p>
+      <div class="row"><button class="btn" id="btnGenAll">Generar los grupos pendientes</button><button class="btn ok" id="btnLockAll">Bloquear y publicar los generados</button><span id="allMsg" class="muted small"></span></div>
     </div>
 
     <div class="card">
-      <h2>4 · Asignación por pares en cada grupo</h2>
-      <p class="muted" style="margin-top:0">Para cada grupo, al cerrar la sesión 7: (1) marca quién no participa; (2) revisa ENT3; (3) <b>Generar</b>: ordena por sustituciones correctas, forma pares consecutivos y sortea el código dentro de cada par; (4) <b>Bloquear y publicar</b>: crea el enlace y el QR para que los alumnos abran su «sobre».</p>
+      <h2>4 · Grupos: estado de cada alumno, enlace y QR</h2>
+      <p class="muted" style="margin-top:0">En la sesión 7 actualiza el <b>Estado</b> de cada alumno (Participa, No participa, No elegible, Ausente…). El estado no modifica la asignación; sirve para el F-02, las etiquetas, la verificación y el diagrama CONSORT.</p>
       <div id="groupCards"></div>
     </div>
 
@@ -233,8 +234,8 @@ footer{color:var(--muted);font-size:.78rem;text-align:center;padding:10px}
     <h2>Cómo funciona</h2>
     <h3>Para el alumno</h3>
     <ol class="steps">
-      <li>Al final de la sesión 7, escanea el QR que proyecta el profesor.</li>
-      <li>Escribe tu código de participante y pulsa «Abrir mi sobre».</li>
+      <li>En la sesión 7, después de firmar tu consentimiento, escanea el QR de tu grupo que proyecta el profesor.</li>
+      <li>Escribe tu código de participante, marca que ya firmaste el consentimiento y pulsa «Abrir mi sobre».</li>
       <li>Anota en el CRF la letra (A o B) y el comprobante; guarda la imagen del comprobante.</li>
       <li>En la sesión 8 elige esa misma letra en DSST-LFT2.</li>
     </ol>
@@ -242,12 +243,13 @@ footer{color:var(--muted);font-size:.78rem;text-align:center;padding:10px}
     <ol class="steps">
       <li>Publica <code>ASIG_LFT2.html</code> en el mismo repositorio de GitHub Pages que DSST-LFT2 y escribe su dirección en «Configuración».</li>
       <li>Carga una vez el Excel de población; la lista queda en tu navegador.</li>
-      <li>Al cerrar cada sesión 7: carga los CSV del entrenamiento, genera la asignación del grupo, bloquéala y proyecta el QR.</li>
+      <li>Antes de la primera sesión 7: genera y bloquea la asignación de todos los grupos (sección 3) y descarga el respaldo.</li>
+      <li>En cada sesión 7, después del consentimiento: proyecta el QR del grupo, verifica comprobantes y actualiza el estado de cada alumno.</li>
       <li>Descarga la asignación (CSV), el Excel con la columna «Tx Asignado» y el F-02 prellenado para preparar las bebidas de la sesión 8.</li>
       <li>Después de la sesión 8 verifica que cada alumno eligió la letra correcta en DSST-LFT2.</li>
     </ol>
     <h3>Método</h3>
-    <p class="small">Aleatorización por pares (<i>matched-pair</i>) dentro de cada grupo de laboratorio según las sustituciones correctas del bloque ENT3 de DSST-LFT2 (protocolo LFT2-TDAH-PRO-2026, sección de aleatorización). Si el número de participantes es impar, el último se sortea de forma independiente. El sorteo usa una semilla aleatoria registrada (generador mulberry32), de modo que la asignación es reproducible y auditable. El enlace para el alumno contiene la tabla de asignación ofuscada con una sal por grupo (FNV-1a), sin nombres; el comprobante es una huella de código + letra.</p>
+    <p class="small">Aleatorización estratificada por grupo de laboratorio en bloques permutados de tamaño aleatorio (2 o 4), generada antes de la sesión 7 para todos los alumnos registrados (protocolo LFT2-TDAH-PRO-2026, sección de aleatorización). La lista se oculta y solo se revela a cada alumno después de firmar el consentimiento; la asignación se vuelve efectiva al consentir. El sorteo usa una semilla aleatoria registrada (generador mulberry32), de modo que es reproducible y auditable. El enlace del alumno contiene la tabla de asignación ofuscada con una sal por grupo (FNV-1a), sin nombres; el comprobante es una huella de código + letra.</p>
     <p class="small muted">Qué letra corresponde al producto activo no se registra en esta aplicación: la decide y resguarda el profesor (clave de cegamiento en DSST-LFT2).</p>
   </div>
 </section>
@@ -2567,7 +2569,7 @@ break;case"<bookViews":;case"<bookViews>":;case"</bookViews>":break;case"<workbo
 </script>
 <script>
 "use strict";
-const APP_VERSION="1.0.1 (2026-10)";
+const APP_VERSION="1.1.0 (2026-10)";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function fnv(str){let h=0x811c9dc5;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0}return h>>>0}
@@ -2618,12 +2620,13 @@ let CUR=null;
 function initAlumno(){
   if(!PAY){$("aNoLink").classList.remove("hidden");return}
   $("aMain").classList.remove("hidden");$("aGroup").textContent=PAY.l||PAY.g;
-  $("aMeta").textContent=`${PAY.n} participantes · asignación del ${PAY.t}`;
+  $("aMeta").textContent=`${PAY.n} alumnos · asignación del ${PAY.t}`;
   const s=seenGet()[PAY.g+"|"+PAY.s];if(s&&s.code)$("aCode").value=s.code;
 }
 $("aCode").addEventListener("keydown",e=>{if(e.key==="Enter")$("btnOpen").click()});
 $("btnOpen").onclick=()=>{const code=normCode($("aCode").value);const m=$("aMsg");m.classList.add("hidden");
   if(!code){m.textContent="Escribe tu código de participante.";m.classList.remove("hidden");return}
+  if(!$("aConsent").checked){m.textContent="Abre tu sobre solo después de firmar tu carta de consentimiento informado. Si decidiste no participar, no necesitas abrirlo.";m.classList.remove("hidden");return}
   const L=lookup(code);
   if(!L){m.innerHTML=`El código <b>${esc(code)}</b> no está en la asignación de este grupo. Revisa que lo escribiste igual que en tu consentimiento (p. ej., S01-03) y que escaneaste el QR de tu grupo. Si el problema sigue, avisa al profesor.`;m.classList.remove("hidden");return}
   const proof=proofOf(PAY.s,code,L);const seen=seenGet();const key=PAY.g+"|"+PAY.s;
@@ -2650,7 +2653,7 @@ $("btnProof").onclick=()=>{if(!CUR)return;const W=720,H=900,cv=document.createEl
 const KEY="asig_lft2_prof_v1";
 let ST=null;
 function blank(){return{pinHash:"",codes:["A","B"],url:"",roster:[],groups:{},xlsxB64:"",xlsxName:"",log:[]}}
-function load(){try{ST=JSON.parse(localStorage.getItem(KEY)||"null")||blank()}catch(e){ST=blank()}}
+function load(){try{ST=JSON.parse(localStorage.getItem(KEY)||"null")||blank()}catch(e){ST=blank()}for(const s of ST.roster)if(!s.estado||s.estado==="Elegible")s.estado="Pendiente"}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){alertM("No se pudo guardar en este navegador (almacenamiento lleno o bloqueado). Descarga un respaldo.")}}
 function log(t){ST.log.push({t:nowISO(),e:t});save();renderLog()}
 load();
@@ -2684,7 +2687,7 @@ $("fRoster").onchange=async e=>{const f=e.target.files[0];if(!f)return;
     const out=[];for(const r of rows){const code=normCode(pick(r,/^c[oó]digo$/i));if(!code)continue;
       const o=old[code]||{};out.push({codigo:code,sesion:String(pick(r,/^sesi[oó]n$/i)||"SIN-GRUPO").trim(),equipo:String(pick(r,/^equipo$/i)??"").trim(),
         nombre:[pick(r,/^ape_?pat/i),pick(r,/^ape_?mat/i),pick(r,/^nombres?$/i)].filter(Boolean).join(" ").trim(),
-        estado:o.estado||"Elegible",ENT3:o.ENT3??null,ENT2:o.ENT2??null})}
+        estado:(o.estado&&o.estado!=="Elegible")?o.estado:"Pendiente"})}
     const dup=out.map(s=>s.codigo).filter((c,i,a)=>a.indexOf(c)!==i);
     if(dup.length){alertM("Códigos duplicados en el archivo: "+[...new Set(dup)].join(", ")+". Corrígelos antes de continuar.");return}
     const locked=Object.entries(ST.groups).filter(([k,g])=>g.state==="bloqueado").map(([k])=>k);
@@ -2703,89 +2706,81 @@ function renderConfig(){$("cCodes").value=ST.codes.join(",");$("cUrl").value=ST.
   const ids=groupIds();$("tblGroups").innerHTML="<tr><th>Grupo (Excel)</th><th>n</th><th>Etiqueta en DSST-LFT2</th></tr>"+ids.map(id=>`<tr><td>${esc(id)}</td><td>${ST.roster.filter(s=>s.sesion===id).length}</td><td><input data-g="${esc(id)}" value="${esc(G(id).label)}" style="width:200px"></td></tr>`).join("");
   for(const i of $("tblGroups").querySelectorAll("input"))i.onchange=()=>{G(i.dataset.g).label=i.value.trim();save();setTimeout(renderGroups,250)}}
 
-/* ENT3 desde CSV de DSST-LFT2 */
-$("fEnt").onchange=async e=>{const files=[...e.target.files];if(!files.length)return;let nRec=0;const found={};
-  for(const f of files){const rows=parseCSV(await readText(f));
-    for(const r of rows){const code=normCode(r.codigo);if(!code)continue;
-      if(r.modo&&r.modo!=="ESTUDIO")continue;
-      if(r.bloque&&r.prueba==="DSST"&&r.correctas!==""){const b=String(r.bloque).toUpperCase();if(b==="ENT3"||b==="ENT2"){(found[code]=found[code]||{})[b]=+r.correctas;nRec++}}
-      for(const b of ["ENT3","ENT2"]){const k=Object.keys(r).find(k=>k.toUpperCase()===b+"_DSST_CORRECTAS");if(k&&r[k]!==""){(found[code]=found[code]||{})[b]=+r[k];nRec++}}}}
-  let m=0,miss=[];for(const [code,v] of Object.entries(found)){const s=ST.roster.find(s=>s.codigo===code);if(!s){miss.push(code);continue}
-    const g=G(s.sesion);if(g.state==="bloqueado")continue;if(v.ENT3!=null)s.ENT3=v.ENT3;if(v.ENT2!=null)s.ENT2=v.ENT2;m++}
-  log(`ENT3/ENT2 cargados desde ${files.length} archivo(s): ${m} participantes`);save();renderAll();
-  $("entMsg").textContent=`${m} participantes actualizados.`+(miss.length?` Códigos no encontrados en la población: ${miss.join(", ")}.`:"");e.target.value=""};
-
 /* asignación */
-function scoreOf(s){return s.ENT3!=null&&s.ENT3!==""?{v:+s.ENT3,src:"ENT3"}:(s.ENT2!=null&&s.ENT2!==""?{v:+s.ENT2,src:"ENT2"}:{v:null,src:"sin dato"})}
-function generate(id){const g=G(id),codes=ST.codes;const seed=rand32();const rng=mulberry32(seed);
-  const el=ST.roster.filter(s=>s.sesion===id&&s.estado==="Elegible");
-  const withS=el.filter(s=>scoreOf(s).v!=null).sort((a,b)=>scoreOf(b).v-scoreOf(a).v||a.codigo.localeCompare(b.codigo));
-  const noS=el.filter(s=>scoreOf(s).v==null).sort((a,b)=>a.codigo.localeCompare(b.codigo));
-  for(let i=noS.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[noS[i],noS[j]]=[noS[j],noS[i]]}
-  const ord=withS.concat(noS);const alloc={};let p=1;
-  for(let i=0;i<ord.length;i+=2){const a=ord[i],b=ord[i+1];const f=rng()<.5?0:1;
-    if(b){alloc[a.codigo]={tx:codes[f],par:`P${p}`,orden:i+1};alloc[b.codigo]={tx:codes[1-f],par:`P${p}`,orden:i+2};p++}
-    else alloc[a.codigo]={tx:codes[f],par:"impar",orden:i+1}}
+const ESTADOS=["Pendiente","Participa","No participa","No elegible","Ausente en S7","Retirado","Baja del curso"];
+const EXCL_GEN="Baja del curso";
+function generate(id,quiet){const g=G(id),codes=ST.codes;const seed=rand32();const rng=mulberry32(seed);
+  const L=ST.roster.filter(s=>s.sesion===id&&s.estado!==EXCL_GEN).sort((a,b)=>a.codigo.localeCompare(b.codigo));
+  const alloc={};let k=0,b=1;
+  while(k<L.length){const size=rng()<.5?2:4;const blk=[];for(let t=0;t<size;t++)blk.push(codes[t%2]);
+    for(let t=blk.length-1;t>0;t--){const j=Math.floor(rng()*(t+1));[blk[t],blk[j]]=[blk[j],blk[t]]}
+    for(let t=0;t<size&&k<L.length;t++,k++)alloc[L[k].codigo]={tx:blk[t],bloque:`B${b}(${size})`,orden:k+1};b++}
   g.alloc=alloc;g.seed=seed;g.state="generado";g.fecha=nowISO();g.salt="";
-  log(`Grupo ${id}: asignación generada (semilla ${seed}, ${ord.length} participantes)`);save();renderGroups()}
-function lockGroup(id){const g=G(id);if(g.state!=="generado"||!Object.keys(g.alloc).length){alertM("Los datos del grupo cambiaron: vuelve a generar la asignación antes de bloquearla.");renderGroups();return}g.salt=randSalt();g.state="bloqueado";g.fecha=nowISO();
+  log(`Grupo ${id}: asignación previa generada (semilla ${seed}, ${L.length} alumnos, ${b-1} bloques)`);save();if(!quiet)renderGroups()}
+function lockGroup(id,quiet){const g=G(id);if(g.state!=="generado"||!Object.keys(g.alloc).length){if(!quiet){alertM("Los datos del grupo cambiaron: vuelve a generar la asignación antes de bloquearla.");renderGroups()}return}g.salt=randSalt();g.state="bloqueado";g.fecha=nowISO();
   for(const [code,a] of Object.entries(g.alloc))a.comprobante=proofOf(g.salt,code,a.tx);
-  log(`Grupo ${id}: asignación bloqueada y publicada (sal ${g.salt})`);save();renderGroups()}
+  log(`Grupo ${id}: asignación bloqueada y publicada (sal ${g.salt})`);save();if(!quiet)renderGroups()}
 function payloadOf(id){const g=G(id);const ent=Object.entries(g.alloc).map(([code,a])=>{const idx=ST.codes.indexOf(a.tx);const bit=idx^(fnv(g.salt+"|"+code+"|m")&1);return fnv36(g.salt+"|"+code,7)+bit}).sort();
   const j={v:1,g:id,l:g.label,c:ST.codes,s:g.salt,t:g.fecha.slice(0,10),n:ent.length,d:ent.join("")};return b64uEnc(JSON.stringify(j))}
 function linkOf(id){const base=(ST.url||location.href.split("#")[0]);return base+"#a="+payloadOf(id)}
 function qrSvg(text,cell){const q=qrcode(0,"M");q.addData(text);q.make();return q.createSvgTag({cellSize:cell||4,margin:2,scalable:true})}
-async function unlockGroup(id){const ok=await modal(`<p>Reasignar el grupo <b>${esc(id)}</b> invalida el enlace y los comprobantes ya entregados. Solo debe hacerse si nadie ha abierto su sobre o por una desviación documentada.</p><p>Escribe <b>REASIGNAR</b> para confirmar y el motivo:</p><input id="cfTxt" placeholder="REASIGNAR" style="padding:8px;border:1px solid #d9dee8;border-radius:8px;width:100%;margin-bottom:8px"><input id="cfWhy" placeholder="Motivo" style="padding:8px;border:1px solid #d9dee8;border-radius:8px;width:100%">`,[{t:"Cancelar",v:false,c:"sec"},{t:"Desbloquear",v:true,c:"danger"}]);
+async function unlockGroup(id){const ok=await modal(`<p>Reasignar el grupo <b>${esc(id)}</b> invalida el enlace y los comprobantes ya entregados. Solo debe hacerse antes de la sesión 7 del grupo (nadie ha abierto su sobre) o por una desviación documentada.</p><p>Escribe <b>REASIGNAR</b> para confirmar y el motivo:</p><input id="cfTxt" placeholder="REASIGNAR" style="padding:8px;border:1px solid #d9dee8;border-radius:8px;width:100%;margin-bottom:8px"><input id="cfWhy" placeholder="Motivo" style="padding:8px;border:1px solid #d9dee8;border-radius:8px;width:100%">`,[{t:"Cancelar",v:false,c:"sec"},{t:"Desbloquear",v:true,c:"danger"}]);
   if(!ok)return;if(((document.getElementById("cfTxt")||{}).value||"").trim().toUpperCase()!=="REASIGNAR"){alertM("No se confirmó.");return}
   const why=((document.getElementById("cfWhy")||{}).value||"").trim()||"sin motivo";const g=G(id);g.state="generado";g.salt="";
   for(const a of Object.values(g.alloc))delete a.comprobante;log(`Grupo ${id}: DESBLOQUEADO para reasignación. Motivo: ${why}`);save();renderGroups()}
-function balance(id){const g=G(id);const by={};for(const c of ST.codes)by[c]={n:0,sum:0,k:0};
-  for(const [code,a] of Object.entries(g.alloc)){const s=ST.roster.find(s=>s.codigo===code);const b=by[a.tx];if(!b)continue;b.n++;const sc=s?scoreOf(s).v:null;if(sc!=null){b.sum+=sc;b.k++}}
-  return ST.codes.map(c=>`${esc(c)}: n = ${by[c].n}`+(by[c].k?`, ENT3 medio = ${(by[c].sum/by[c].k).toFixed(1)}`:"")).join(" · ")}
+function balance(id){const g=G(id);const by={},bp={};for(const c of ST.codes){by[c]=0;bp[c]=0}
+  for(const [code,a] of Object.entries(g.alloc)){if(by[a.tx]==null)continue;by[a.tx]++;const s=ST.roster.find(s=>s.codigo===code);if(s&&s.estado==="Participa")bp[a.tx]++}
+  const np=Object.values(bp).reduce((x,y)=>x+y,0);
+  return ST.codes.map(c=>`${esc(c)}: ${by[c]}`).join(" · ")+(np?` · participan: `+ST.codes.map(c=>`${esc(c)} ${bp[c]}`).join(" / "):"")}
 function renderGroups(){const box=$("groupCards");const ids=groupIds();if(!ids.length){box.innerHTML='<p class="muted">Carga primero la población.</p>';return}
   box.innerHTML=ids.map(id=>{const g=G(id);const S=ST.roster.filter(s=>s.sesion===id);
     const pill=g.state==="bloqueado"?'<span class="pill lock">Bloqueado y publicado</span>':g.state==="generado"?'<span class="pill gen">Generado (sin publicar)</span>':'<span class="pill">Pendiente</span>';
-    const ordered=S.slice().sort((a,b)=>{const A=g.alloc[a.codigo],B=g.alloc[b.codigo];if(A&&B)return A.orden-B.orden;if(A)return-1;if(B)return 1;return a.codigo.localeCompare(b.codigo)});
+    const ordered=S.slice().sort((a,b)=>a.codigo.localeCompare(b.codigo));
     const lockd=g.state==="bloqueado";
-    const rows=ordered.map(s=>{const a=g.alloc[s.codigo];const pn=a&&a.par!=="impar"?+a.par.slice(1):0;
-      return`<tr class="${s.estado!=="Elegible"?"excl":""} ${pn%2?"pairA":"pairB"}"><td>${esc(s.codigo)}</td><td>${esc(s.nombre)}</td><td>${esc(s.equipo)}</td>
-      <td><select data-c="${esc(s.codigo)}" data-k="estado" ${lockd?"disabled":""}>${["Elegible","No participa","Ausente en S7","Retirado"].map(o=>`<option ${o===s.estado?"selected":""}>${o}</option>`).join("")}</select></td>
-      <td><input class="num" data-c="${esc(s.codigo)}" data-k="ENT3" value="${s.ENT3??""}" ${lockd?"disabled":""}></td><td><input class="num" data-c="${esc(s.codigo)}" data-k="ENT2" value="${s.ENT2??""}" ${lockd?"disabled":""}></td>
-      <td>${a?esc(a.par):"—"}</td><td><b>${a?esc(a.tx):"—"}</b></td><td>${a&&a.comprobante?esc(a.comprobante):"—"}</td></tr>`}).join("");
+    const rows=ordered.map(s=>{const a=g.alloc[s.codigo];const bn=a?parseInt(a.bloque.slice(1)):0;const off=["No participa","No elegible","Ausente en S7","Retirado","Baja del curso"].includes(s.estado);
+      return`<tr class="${off?"excl":""} ${bn%2?"pairA":"pairB"}"><td>${esc(s.codigo)}</td><td>${esc(s.nombre)}</td><td>${esc(s.equipo)}</td>
+      <td><select data-c="${esc(s.codigo)}" data-k="estado">${ESTADOS.map(o=>`<option ${o===s.estado?"selected":""}>${o}</option>`).join("")}</select></td>
+      <td>${a?esc(a.bloque):"—"}</td><td><b>${a?esc(a.tx):"—"}</b></td><td>${a&&a.comprobante?esc(a.comprobante):"—"}</td></tr>`}).join("");
     let pub="";if(lockd){const L=linkOf(id);const isFile=!ST.url&&location.protocol==="file:";
       pub=`<div class="row" style="align-items:flex-start;margin-top:10px"><div class="qr">${qrSvg(L,4)}</div><div style="flex:1;min-width:240px">
         <div class="small muted">Enlace para los alumnos de este grupo (sin nombres):</div><div class="linkbox">${esc(L)}</div>
         ${isFile?'<div class="note warn small">Estás usando la página como archivo local: el enlace no funcionará en los teléfonos. Escribe en «Configuración» la dirección pública de GitHub Pages.</div>':""}
         <div class="row" style="margin-top:8px"><button class="btn sm" data-act="qr" data-g="${esc(id)}">Proyectar QR</button><button class="btn sm sec" data-act="copy" data-g="${esc(id)}">Copiar enlace</button><button class="btn sm sec" data-act="test" data-g="${esc(id)}">Probar como alumno</button><button class="btn sm danger" data-act="unlock" data-g="${esc(id)}">Desbloquear…</button></div>
         <div class="small muted" style="margin-top:6px">Semilla ${g.seed} · sal ${esc(g.salt)} · ${esc(g.fecha)}</div></div></div>`}
-    return`<div class="gcard"><div class="row"><h3>${esc(g.label)} <span class="muted small">(${esc(id)})</span></h3>${pill}<span class="muted small" style="margin-left:auto">${Object.keys(g.alloc).length?balance(id):""}</span></div>
-      <div class="scroll" style="max-height:340px;margin-top:8px"><table class="data"><tr><th>Código</th><th>Nombre</th><th>Equipo</th><th>Estado</th><th>ENT3</th><th>ENT2</th><th>Par</th><th>Tx</th><th>Comprobante</th></tr>${rows}</table></div>
-      <div class="row" style="margin-top:10px">${lockd?"":`<button class="btn sm" data-act="gen" data-g="${esc(id)}">${g.state==="generado"?"Volver a generar":"Generar asignación"}</button>`}
+    return`<div class="gcard"><div class="row"><h3>${esc(g.label)} <span class="muted small">(${esc(id)})</span></h3>${pill}<span class="muted small bal" style="margin-left:auto">${Object.keys(g.alloc).length?balance(id):""}</span></div>
+      <div class="scroll" style="max-height:340px;margin-top:8px"><table class="data"><tr><th>Código</th><th>Nombre</th><th>Equipo</th><th>Estado</th><th>Bloque</th><th>Tx</th><th>Comprobante</th></tr>${rows}</table></div>
+      <div class="row" style="margin-top:10px">${lockd?"":`<button class="btn sm" data-act="gen" data-g="${esc(id)}">${g.state==="generado"?"Volver a generar":"Generar asignación previa"}</button>`}
       ${g.state==="generado"?`<button class="btn sm ok" data-act="lock" data-g="${esc(id)}">Bloquear y publicar</button>`:""}</div>${pub}</div>`}).join("");
-  for(const el of box.querySelectorAll("[data-k]"))el.onchange=()=>{const s=ST.roster.find(s=>s.codigo===el.dataset.c);const k=el.dataset.k;
-    if(k==="estado")s.estado=el.value;else{const v=el.value.trim();s[k]=v===""?null:(isFinite(+v)?+v:null)}
-    const g=G(s.sesion);if(k==="estado")el.closest("tr").classList.toggle("excl",s.estado!=="Elegible");
-    if(g.state==="generado"){g.state="pendiente";g.alloc={};log(`Grupo ${s.sesion}: datos modificados; asignación generada descartada`);save();setTimeout(renderGroups,250)}else save();renderTiles()};
+  for(const el of box.querySelectorAll("[data-k]"))el.onchange=()=>{const s=ST.roster.find(s=>s.codigo===el.dataset.c);const prev=s.estado;s.estado=el.value;
+    const off=["No participa","No elegible","Ausente en S7","Retirado","Baja del curso"].includes(s.estado);el.closest("tr").classList.toggle("excl",off);
+    const g=G(s.sesion);log(`${s.codigo}: estado ${prev} → ${s.estado}`);
+    if(g.state==="generado"&&(prev===EXCL_GEN||s.estado===EXCL_GEN)){g.state="pendiente";g.alloc={};log(`Grupo ${s.sesion}: lista modificada; asignación generada descartada`);save();setTimeout(renderGroups,250)}
+    else{save();const bal=el.closest(".gcard").querySelector(".bal");if(bal)bal.innerHTML=balance(s.sesion)}renderTiles()};
   for(const b of box.querySelectorAll("[data-act]"))b.onclick=async()=>{const id=b.dataset.g,act=b.dataset.act;
-    if(act==="gen"){const el=ST.roster.filter(s=>s.sesion===id&&s.estado==="Elegible");if(el.length<2){alertM("Se requieren al menos dos participantes elegibles.");return}
-      const sin=el.filter(s=>scoreOf(s).v==null).length;if(sin){const ok=await modal(`<p>${sin} participante(s) elegible(s) sin ENT3 ni ENT2: se colocarán al final, en orden aleatorio. ¿Continuar?</p>`,[{t:"Cancelar",v:false,c:"sec"},{t:"Continuar",v:true}]);if(!ok)return}generate(id)}
+    if(act==="gen"){const L=ST.roster.filter(s=>s.sesion===id&&s.estado!==EXCL_GEN);if(L.length<2){alertM("Se requieren al menos dos alumnos.");return}generate(id)}
     if(act==="lock"){if(G(id).state!=="generado"){alertM("Los datos del grupo cambiaron: vuelve a generar la asignación antes de bloquearla.");return}const ok=await modal(`<p>Al bloquear el grupo <b>${esc(id)}</b> se crea el enlace para los alumnos y ya no podrá modificarse sin dejar registro. ¿Continuar?</p>`,[{t:"Cancelar",v:false,c:"sec"},{t:"Bloquear y publicar",v:true,c:"ok"}]);if(ok)lockGroup(id)}
     if(act==="qr"){const g=G(id);$("qrFull").innerHTML=`<h1>${esc(g.label)}</h1><div class="muted">Escanea, escribe tu código de participante y abre tu sobre</div><div class="qr">${qrSvg(linkOf(id),8)}</div><button class="btn" id="qrClose">Cerrar</button>`;$("qrFull").classList.remove("hidden");$("qrClose").onclick=()=>$("qrFull").classList.add("hidden")}
     if(act==="copy"){try{await navigator.clipboard.writeText(linkOf(id));b.textContent="¡Copiado!"}catch(e){alertM("Copia el enlace manualmente desde el recuadro.")}}
     if(act==="test"){window.open(location.href.split("#")[0]+"#a="+payloadOf(id),"_blank")}
     if(act==="unlock")unlockGroup(id)}}
-function renderTiles(){const ids=groupIds();const el=ST.roster.filter(s=>s.estado==="Elegible").length;const lk=ids.filter(id=>G(id).state==="bloqueado").length;
+function renderTiles(){const ids=groupIds();const cnt=e=>ST.roster.filter(s=>s.estado===e).length;const lk=ids.filter(id=>G(id).state==="bloqueado").length;
   const asg=ST.roster.filter(s=>{const g=ST.groups[s.sesion];return g&&g.state==="bloqueado"&&g.alloc[s.codigo]}).length;
-  $("popTiles").innerHTML=`<div class="tile"><div class="v">${ST.roster.length}</div><div class="k">Registrados</div></div><div class="tile"><div class="v">${el}</div><div class="k">Elegibles</div></div><div class="tile"><div class="v">${ids.length}</div><div class="k">Grupos</div></div><div class="tile"><div class="v">${lk}/${ids.length}</div><div class="k">Grupos bloqueados</div></div><div class="tile"><div class="v">${asg}</div><div class="k">Con tratamiento asignado</div></div>`+
+  $("popTiles").innerHTML=`<div class="tile"><div class="v">${ST.roster.length}</div><div class="k">Registrados</div></div><div class="tile"><div class="v">${asg}</div><div class="k">Con asignación bloqueada</div></div><div class="tile"><div class="v">${lk}/${ids.length}</div><div class="k">Grupos bloqueados</div></div><div class="tile"><div class="v">${cnt("Participa")}</div><div class="k">Participan</div></div><div class="tile"><div class="v">${cnt("Pendiente")}</div><div class="k">Estado pendiente</div></div>`+
   ids.map(id=>`<div class="tile"><div class="v">${ST.roster.filter(s=>s.sesion===id).length}</div><div class="k">${esc(G(id).label)}</div></div>`).join("")}
+$("btnGenAll").onclick=async()=>{const ids=groupIds().filter(id=>G(id).state==="pendiente");if(!ids.length){alertM("No hay grupos pendientes.");return}
+  const ok=await modal(`<p>Se generará la asignación previa de ${ids.length} grupo(s): ${ids.map(esc).join(", ")}. Revisa el resultado antes de bloquear.</p>`,[{t:"Cancelar",v:false,c:"sec"},{t:"Generar",v:true}]);if(!ok)return;
+  for(const id of ids)if(ST.roster.filter(s=>s.sesion===id&&s.estado!==EXCL_GEN).length>=2)generate(id,true);renderGroups();renderTiles();$("allMsg").textContent=`Generados: ${ids.length}`};
+$("btnLockAll").onclick=async()=>{const ids=groupIds().filter(id=>G(id).state==="generado");if(!ids.length){alertM("No hay grupos generados sin bloquear.");return}
+  const ok=await modal(`<p>Se bloquearán y publicarán ${ids.length} grupo(s): ${ids.map(esc).join(", ")}. Después, cualquier cambio quedará registrado en la bitácora. ¿Continuar?</p>`,[{t:"Cancelar",v:false,c:"sec"},{t:"Bloquear y publicar",v:true,c:"ok"}]);if(!ok)return;
+  for(const id of ids)lockGroup(id,true);renderGroups();renderTiles();$("allMsg").textContent=`Bloqueados: ${ids.length}. Descarga el respaldo (sección 6).`};
 function renderLog(){$("tblLog").innerHTML="<tr><th>Fecha y hora</th><th>Evento</th></tr>"+ST.log.slice().reverse().map(l=>`<tr><td>${esc(l.t)}</td><td style="white-space:normal">${esc(l.e)}</td></tr>`).join("")}
 function renderAll(){renderConfig();renderTiles();renderGroups();renderLog()}
 
 /* ---------- exportaciones ---------- */
 function allocRows(onlyLocked){const out=[];for(const id of groupIds()){const g=G(id);if(onlyLocked&&g.state!=="bloqueado")continue;
-  for(const s of ST.roster.filter(s=>s.sesion===id)){const a=g.alloc[s.codigo];const sc=scoreOf(s);
-    out.push({grupo_id:id,grupo:g.label,codigo:s.codigo,equipo:s.equipo,estado:s.estado,correctas_entrenamiento:sc.v,fuente_entrenamiento:sc.v==null?"":sc.src,par:a?a.par:"",codigo_tratamiento:a?a.tx:"",comprobante:a?a.comprobante||"":"",semilla:g.seed??"",fecha_asignacion:g.state==="bloqueado"?g.fecha:"",estado_asignacion:g.state})}}return out}
-const ACOLS=["grupo_id","grupo","codigo","equipo","estado","correctas_entrenamiento","fuente_entrenamiento","par","codigo_tratamiento","comprobante","semilla","fecha_asignacion","estado_asignacion"];
+  for(const s of ST.roster.filter(s=>s.sesion===id)){const a=g.alloc[s.codigo];
+    out.push({grupo_id:id,grupo:g.label,codigo:s.codigo,equipo:s.equipo,estado:s.estado,bloque:a?a.bloque:"",orden:a?a.orden:"",codigo_tratamiento:a?a.tx:"",comprobante:a?a.comprobante||"":"",semilla:g.seed??"",fecha_asignacion:g.state==="bloqueado"?g.fecha:"",estado_asignacion:g.state})}}return out}
+const ACOLS=["grupo_id","grupo","codigo","equipo","estado","bloque","orden","codigo_tratamiento","comprobante","semilla","fecha_asignacion","estado_asignacion"];
 function needLocked(){if(!groupIds().some(id=>G(id).state==="bloqueado")){alertM("Aún no hay grupos bloqueados.");return false}return true}
 $("btnCsv").onclick=()=>{if(!needLocked())return;download(`ASIG_LFT2_asignacion_${stamp()}.csv`,toCSV(allocRows(true),ACOLS));log("Exportada asignación (CSV)")};
 $("btnXlsx").onclick=()=>{if(!needLocked())return;const rows=allocRows(true);const map=Object.fromEntries(rows.filter(r=>r.codigo_tratamiento).map(r=>[r.codigo,r]));
@@ -2806,23 +2801,27 @@ function printDoc(title,body){const w=window.open("","_blank");if(!w){alertM("Pe
   .pb{page-break-after:always}.lab{display:inline-block;width:62mm;height:32mm;border:1px dashed #999;margin:2mm;padding:3mm;box-sizing:border-box;vertical-align:top;text-align:center}
   .lab .L{font-size:34px;font-weight:bold;color:#12306b;line-height:1.1}.lab .c{font-size:15px;font-weight:bold}.lab .g{font-size:10px;color:#555}
   .sign{margin-top:10px}@media print{button{display:none}}</style></head><body><button onclick="print()">Imprimir</button>${body}</body></html>`);w.document.close()}
+const OFF=["No participa","No elegible","Ausente en S7","Retirado","Baja del curso"];
+function prepList(g){const all=ST.roster.filter(s=>g.alloc[s.codigo]).sort((a,b)=>a.codigo.localeCompare(b.codigo));const R=all.filter(s=>!OFF.includes(s.estado));
+  const np=R.filter(s=>s.estado==="Participa").length,pe=R.length-np;
+  return{R,note:pe?`Incluye ${np} con estado «Participa» y ${pe} con estado pendiente; excluye ${all.length-R.length} que no participan.`:`Solo alumnos con estado «Participa» (${np}); excluye ${all.length-R.length} que no participan.`}}
 $("btnF02").onclick=()=>{if(!needLocked())return;let html="";
-  for(const id of groupIds()){const g=G(id);if(g.state!=="bloqueado")continue;const R=ST.roster.filter(s=>g.alloc[s.codigo]).sort((a,b)=>a.codigo.localeCompare(b.codigo));
-    html+=`<div class="pb"><h1>F-02 · Registro de preparación, entrega y reconciliación del producto en investigación</h1><div class="sub">LFT2-TDAH-FOR-2026 · Sesión 8 · Grupo: <b>${esc(g.label)}</b> · Fecha: __________ · Asignación bloqueada el ${esc(g.fecha)} (semilla ${g.seed})</div>
+  for(const id of groupIds()){const g=G(id);if(g.state!=="bloqueado")continue;const {R,note}=prepList(g);
+    html+=`<div class="pb"><h1>F-02 · Registro de preparación, entrega y reconciliación del producto en investigación</h1><div class="sub">LFT2-TDAH-FOR-2026 · Sesión 8 · Grupo: <b>${esc(g.label)}</b> · Fecha: __________ · Asignación bloqueada el ${esc(g.fecha)} (semilla ${g.seed}) · ${esc(note)}</div>
     <table><tr><th>Código de participante</th><th>Banda</th><th>A/B</th><th>g a pesar</th><th>g pesados</th><th>Hora de entrega</th><th>Hora de término</th><th>Residual (mL)</th><th>Fracción consumida</th><th>Iniciales</th></tr>
     ${R.map(s=>`<tr><td>${esc(s.codigo)}</td><td></td><td><b>${esc(g.alloc[s.codigo].tx)}</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`).join("")}</table>
     <div>Total por código: ${ST.codes.map(c=>`${esc(c)} = ${R.filter(s=>g.alloc[s.codigo].tx===c).length}`).join(" · ")}</div>
     <div class="sign">Elaboró: ______________________ Fecha: ________ Revisó: ______________________</div></div>`}
   printDoc("F-02 prellenado",html);log("Impreso F-02 prellenado")};
 $("btnLabels").onclick=()=>{if(!needLocked())return;let html="<h1>Etiquetas para vasos opacos · sesión 8</h1><div class='sub'>Recortar y pegar en el vaso y en la tapa.</div>";
-  for(const id of groupIds()){const g=G(id);if(g.state!=="bloqueado")continue;html+=`<h2>${esc(g.label)}</h2>`;
-    for(const s of ST.roster.filter(s=>g.alloc[s.codigo]).sort((a,b)=>a.codigo.localeCompare(b.codigo)))html+=`<div class="lab"><div class="g">LFT2-TDAH · ${esc(g.label)}</div><div class="c">${esc(s.codigo)}</div><div class="L">${esc(g.alloc[s.codigo].tx)}</div><div class="g">Producto en investigación · uso exclusivo del estudio</div></div>`}
+  for(const id of groupIds()){const g=G(id);if(g.state!=="bloqueado")continue;const {R,note}=prepList(g);html+=`<h2>${esc(g.label)}</h2><div class="sub">${esc(note)}</div>`;
+    for(const s of R)html+=`<div class="lab"><div class="g">LFT2-TDAH · ${esc(g.label)}</div><div class="c">${esc(s.codigo)}</div><div class="L">${esc(g.alloc[s.codigo].tx)}</div><div class="g">Producto en investigación · uso exclusivo del estudio</div></div>`}
   printDoc("Etiquetas",html);log("Impresas etiquetas para vasos")};
 $("btnCheckList").onclick=()=>{if(!needLocked())return;let html="";
   for(const id of groupIds()){const g=G(id);if(g.state!=="bloqueado")continue;const R=ST.roster.filter(s=>g.alloc[s.codigo]).sort((a,b)=>a.codigo.localeCompare(b.codigo));
-    html+=`<div class="pb"><h1>Verificación de comprobantes de asignación · sesión 7</h1><div class="sub">Grupo: <b>${esc(g.label)}</b> · El alumno muestra su comprobante; el docente marca y verifica que lo anotó en el CRF.</div>
-    <table><tr><th>Código</th><th>Nombre</th><th>Tx</th><th>Comprobante esperado</th><th>Comprobante mostrado ✓</th><th>Anotado en CRF ✓</th><th>Iniciales</th></tr>
-    ${R.map(s=>`<tr><td>${esc(s.codigo)}</td><td>${esc(s.nombre)}</td><td><b>${esc(g.alloc[s.codigo].tx)}</b></td><td>${esc(g.alloc[s.codigo].comprobante)}</td><td></td><td></td><td></td></tr>`).join("")}</table>
+    html+=`<div class="pb"><h1>Verificación de comprobantes de asignación · sesión 7</h1><div class="sub">Grupo: <b>${esc(g.label)}</b> · Solo abren su sobre quienes firmaron el consentimiento. El alumno muestra su comprobante; el docente marca y verifica que lo anotó en el CRF.</div>
+    <table><tr><th>Código</th><th>Nombre</th><th>Tx</th><th>Comprobante esperado</th><th>Consentimiento firmado ✓</th><th>Comprobante mostrado ✓</th><th>Anotado en CRF ✓</th><th>Iniciales</th></tr>
+    ${R.map(s=>`<tr><td>${esc(s.codigo)}</td><td>${esc(s.nombre)}</td><td><b>${esc(g.alloc[s.codigo].tx)}</b></td><td>${esc(g.alloc[s.codigo].comprobante)}</td><td></td><td></td><td></td><td></td></tr>`).join("")}</table>
     <div class="sub">Documento confidencial (contiene nombres): resguardar junto con F-01.</div></div>`}
   printDoc("Verificación de comprobantes",html);log("Impresa lista de verificación de comprobantes")};
 
@@ -2830,13 +2829,13 @@ $("btnCheckList").onclick=()=>{if(!needLocked())return;let html="";
 $("fVerif").onchange=async e=>{const files=[...e.target.files];if(!files.length)return;const chosen={};
   for(const f of files)for(const r of parseCSV(await readText(f))){const code=normCode(r.codigo);if(!code)continue;if(r.modo&&r.modo!=="ESTUDIO")continue;
     if(r.sesion&&String(r.sesion).toUpperCase()!=="S8")continue;const p=String(r.producto??"").trim().toUpperCase();(chosen[code]=chosen[code]||new Set());if(p)chosen[code].add(p)}
-  const rows=allocRows(true).filter(r=>r.codigo_tratamiento);const out=[];let ok=0;
+  const rows=allocRows(true).filter(r=>r.codigo_tratamiento&&!OFF.includes(r.estado));const out=[];let ok=0;
   for(const r of rows){const c=chosen[r.codigo];let st,cls;
     if(!c){st="Sin registros de S8";cls="warn"}else if(c.size===0){st="Sin código de tratamiento en DSST";cls="err"}else if(c.size>1){st="Varios códigos: "+[...c].join("/");cls="err"}
     else if([...c][0]===r.codigo_tratamiento){st="Coincide";cls="ok";ok++}else{st=`No coincide (eligió ${[...c][0]})`;cls="err"}
     if(cls!=="ok")out.push(`<tr><td>${esc(r.grupo)}</td><td>${esc(r.codigo)}</td><td>${esc(r.codigo_tratamiento)}</td><td><span class="pill" style="background:var(--${cls==="err"?"errbg":"warnbg"})">${esc(st)}</span></td></tr>`)}
   const extra=Object.keys(chosen).filter(c=>!rows.some(r=>r.codigo===c));
-  $("verifOut").innerHTML=`<div class="note ${out.length?"warn":"ok"}">${ok} de ${rows.length} participantes asignados coinciden.${extra.length?` Códigos en DSST sin asignación: ${esc(extra.join(", "))}.`:""} Registra cualquier discrepancia como desviación en el CRF; para el análisis prevalece la asignación (ITT).</div>`+
+  $("verifOut").innerHTML=`<div class="note ${out.length?"warn":"ok"}">${ok} de ${rows.length} participantes asignados (sin contar No participa, No elegible, Ausente, Retirado ni Baja) coinciden.${extra.length?` Códigos en DSST sin asignación: ${esc(extra.join(", "))}.`:""} Registra cualquier discrepancia como desviación en el CRF; para el análisis prevalece la asignación (ITT).</div>`+
     (out.length?`<div class="scroll"><table class="data"><tr><th>Grupo</th><th>Código</th><th>Asignado</th><th>Resultado</th></tr>${out.join("")}</table></div>`:"");
   log(`Verificación contra DSST-LFT2: ${ok}/${rows.length} coinciden`);e.target.value=""};
 
