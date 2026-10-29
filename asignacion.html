@@ -2567,7 +2567,7 @@ break;case"<bookViews":;case"<bookViews>":;case"</bookViews>":break;case"<workbo
 </script>
 <script>
 "use strict";
-const APP_VERSION="1.0.0 (2026-10)";
+const APP_VERSION="1.0.1 (2026-10)";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function fnv(str){let h=0x811c9dc5;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0}return h>>>0}
@@ -2698,10 +2698,10 @@ $("cCodes").onchange=()=>{const c=$("cCodes").value.split(",").map(x=>x.trim().t
   if(c.length!==2||c[0]===c[1]){alertM("Escribe exactamente dos códigos distintos (p. ej., A,B).");$("cCodes").value=ST.codes.join(",");return}
   if(Object.values(ST.groups).some(g=>g.state!=="pendiente")){alertM("Ya hay grupos asignados: cambia los códigos solo antes de asignar.");$("cCodes").value=ST.codes.join(",");return}
   ST.codes=c;save()};
-$("cUrl").onchange=()=>{ST.url=$("cUrl").value.trim();save();renderGroups()};
+$("cUrl").onchange=()=>{const v=$("cUrl").value.trim();if(v===ST.url)return;ST.url=v;save();if(Object.values(ST.groups).some(g=>g.state==="bloqueado"))renderGroups()};
 function renderConfig(){$("cCodes").value=ST.codes.join(",");$("cUrl").value=ST.url||"";
   const ids=groupIds();$("tblGroups").innerHTML="<tr><th>Grupo (Excel)</th><th>n</th><th>Etiqueta en DSST-LFT2</th></tr>"+ids.map(id=>`<tr><td>${esc(id)}</td><td>${ST.roster.filter(s=>s.sesion===id).length}</td><td><input data-g="${esc(id)}" value="${esc(G(id).label)}" style="width:200px"></td></tr>`).join("");
-  for(const i of $("tblGroups").querySelectorAll("input"))i.onchange=()=>{G(i.dataset.g).label=i.value.trim();save();renderGroups()}}
+  for(const i of $("tblGroups").querySelectorAll("input"))i.onchange=()=>{G(i.dataset.g).label=i.value.trim();save();setTimeout(renderGroups,250)}}
 
 /* ENT3 desde CSV de DSST-LFT2 */
 $("fEnt").onchange=async e=>{const files=[...e.target.files];if(!files.length)return;let nRec=0;const found={};
@@ -2728,7 +2728,7 @@ function generate(id){const g=G(id),codes=ST.codes;const seed=rand32();const rng
     else alloc[a.codigo]={tx:codes[f],par:"impar",orden:i+1}}
   g.alloc=alloc;g.seed=seed;g.state="generado";g.fecha=nowISO();g.salt="";
   log(`Grupo ${id}: asignación generada (semilla ${seed}, ${ord.length} participantes)`);save();renderGroups()}
-function lockGroup(id){const g=G(id);g.salt=randSalt();g.state="bloqueado";g.fecha=nowISO();
+function lockGroup(id){const g=G(id);if(g.state!=="generado"||!Object.keys(g.alloc).length){alertM("Los datos del grupo cambiaron: vuelve a generar la asignación antes de bloquearla.");renderGroups();return}g.salt=randSalt();g.state="bloqueado";g.fecha=nowISO();
   for(const [code,a] of Object.entries(g.alloc))a.comprobante=proofOf(g.salt,code,a.tx);
   log(`Grupo ${id}: asignación bloqueada y publicada (sal ${g.salt})`);save();renderGroups()}
 function payloadOf(id){const g=G(id);const ent=Object.entries(g.alloc).map(([code,a])=>{const idx=ST.codes.indexOf(a.tx);const bit=idx^(fnv(g.salt+"|"+code+"|m")&1);return fnv36(g.salt+"|"+code,7)+bit}).sort();
@@ -2764,11 +2764,12 @@ function renderGroups(){const box=$("groupCards");const ids=groupIds();if(!ids.l
       ${g.state==="generado"?`<button class="btn sm ok" data-act="lock" data-g="${esc(id)}">Bloquear y publicar</button>`:""}</div>${pub}</div>`}).join("");
   for(const el of box.querySelectorAll("[data-k]"))el.onchange=()=>{const s=ST.roster.find(s=>s.codigo===el.dataset.c);const k=el.dataset.k;
     if(k==="estado")s.estado=el.value;else{const v=el.value.trim();s[k]=v===""?null:(isFinite(+v)?+v:null)}
-    const g=G(s.sesion);if(g.state==="generado"){g.state="pendiente";g.alloc={};log(`Grupo ${s.sesion}: datos modificados; asignación generada descartada`)}save();renderGroups();renderTiles()};
+    const g=G(s.sesion);if(k==="estado")el.closest("tr").classList.toggle("excl",s.estado!=="Elegible");
+    if(g.state==="generado"){g.state="pendiente";g.alloc={};log(`Grupo ${s.sesion}: datos modificados; asignación generada descartada`);save();setTimeout(renderGroups,250)}else save();renderTiles()};
   for(const b of box.querySelectorAll("[data-act]"))b.onclick=async()=>{const id=b.dataset.g,act=b.dataset.act;
     if(act==="gen"){const el=ST.roster.filter(s=>s.sesion===id&&s.estado==="Elegible");if(el.length<2){alertM("Se requieren al menos dos participantes elegibles.");return}
       const sin=el.filter(s=>scoreOf(s).v==null).length;if(sin){const ok=await modal(`<p>${sin} participante(s) elegible(s) sin ENT3 ni ENT2: se colocarán al final, en orden aleatorio. ¿Continuar?</p>`,[{t:"Cancelar",v:false,c:"sec"},{t:"Continuar",v:true}]);if(!ok)return}generate(id)}
-    if(act==="lock"){const ok=await modal(`<p>Al bloquear el grupo <b>${esc(id)}</b> se crea el enlace para los alumnos y ya no podrá modificarse sin dejar registro. ¿Continuar?</p>`,[{t:"Cancelar",v:false,c:"sec"},{t:"Bloquear y publicar",v:true,c:"ok"}]);if(ok)lockGroup(id)}
+    if(act==="lock"){if(G(id).state!=="generado"){alertM("Los datos del grupo cambiaron: vuelve a generar la asignación antes de bloquearla.");return}const ok=await modal(`<p>Al bloquear el grupo <b>${esc(id)}</b> se crea el enlace para los alumnos y ya no podrá modificarse sin dejar registro. ¿Continuar?</p>`,[{t:"Cancelar",v:false,c:"sec"},{t:"Bloquear y publicar",v:true,c:"ok"}]);if(ok)lockGroup(id)}
     if(act==="qr"){const g=G(id);$("qrFull").innerHTML=`<h1>${esc(g.label)}</h1><div class="muted">Escanea, escribe tu código de participante y abre tu sobre</div><div class="qr">${qrSvg(linkOf(id),8)}</div><button class="btn" id="qrClose">Cerrar</button>`;$("qrFull").classList.remove("hidden");$("qrClose").onclick=()=>$("qrFull").classList.add("hidden")}
     if(act==="copy"){try{await navigator.clipboard.writeText(linkOf(id));b.textContent="¡Copiado!"}catch(e){alertM("Copia el enlace manualmente desde el recuadro.")}}
     if(act==="test"){window.open(location.href.split("#")[0]+"#a="+payloadOf(id),"_blank")}
